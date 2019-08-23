@@ -1,0 +1,209 @@
+<HTML>
+<HEAD>
+<TITLE>
+README for using CAVElib in ACES VisLab</TITLE>
+</HEAD>
+
+<BODY TEXT="#ffffff" LINK="#ccbbcc" VLINK="#88aacc" BGCOLOR="black">
+
+<font color=#ffffcc>
+<H4>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+README for using CAVElib in ACES VisLab
+</H4>
+</font>
+
+<UL>
+<font color="#cccccc">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+File: milagros.tacc.utexas.edu:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/lusr/CAVE/doc/milagros_tacc_utexas_edu_README.txt<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Contact: Makoto Sadahiro makoto@tacc.utexas.edu<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Date written: November 28th, 2004<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Date updated: March 11, 2006<br>
+<br>
+</UL>
+
+<UL>
+<H4>Intro:</H4>
+&nbsp;&nbsp;&nbsp;&nbsp;
+VRCO's CAVElib is designed for making application development easier in immersive environment, like ACES VisLab.  It is capable of mapping virtual screen positions to physical screen positions by using all of 6 sgi graphics pipes.  In ACES VisLab, it is set up in the way a CAVE application will drive all screens in 360 degrees by using all 13 projectors via all 6 pipes.  The area of display is fully and easily configurable by each user via configuration file.  Due to our current hardware set up, only front curved screen is set up to be capable in stereo-mode.  This requires the use of stereo glass that is available in VisLab.  Normally, unless it is run in a simulator mode, a head tracking device with wand is used for input device to drive CAVE applications.  This will require "trackd" daemon and another daemon to retrieve signals from tracking device.  In VisLab as of December 2003, trackd daemon, hiBall_client daemon is used to fetch input signals from hiBall head tracking device.  The trackd, as a part of VRCO's CAVElib, is designed to feed its positional/rotational signal to CAVElib applications via UNIX named pipe.  The trackd will sample coordinate/rotational signals from hiBall through hiBall_client, which also runs on the same host as trackd.  There are also several input devices available to be used with CAVElib.  For further information, please refer to the VRCO's CAVElib documentation.<br>
+
+<H4>CAVElib environment installation:</H4>
+&nbsp;&nbsp;&nbsp;&nbsp;
+There is a script to set up visualization environment.  The scrip will setup your account for hiBall, CAVElib and vGeo.  Running this script will be the easiest way to set up your user account for immersive environment.  Issue the following command.<br>
+<br>
+> /lusr/immersive_env/bin/create_immersive_env.milagros_tacc_utexas_edu.csh<br>
+<br>
+This script assumes you are using csh/tcsh.  If you are using another type of shell, please talk to us.  The script will create few files in your home directory.  The script will also add a line<br>
+<br>
+source ${HOME}/.milagros_env<br>
+<br>
+at the end of .cshrc in your home directory.  This is your original sourcing point to all of environment that you will need for the immersive environment on "milagros.tacc.utexas.edu".  Now, environment installation is done.  Issue a command<br>
+<br>
+> source ~/.cshrc<br>
+<br>
+to let new setup to take effect, or you may re-login.  Now your account is setup for CAVElib.  The environment file,<br>
+<br>
+${HOME}/.user.milagros.tacc.utexas.edu.cave_env<br>
+<br>
+is where you will add your own environment values.  There is a section that tells to add your own environment.  The first line is<br>
+<br>
+source /lusr/HiBall/env/milagros.tacc.utexas.edu.cave_env<br>
+<br>
+Do not comment this out.  Your own environment is to be added after this line.  There is a section in the file to instruct you to add your environments.  You may want to take a look at these files to see what kind of environment value is used so you can override what you need in your own environment file for CAVElib.  If you are confused, look into the account of username, "testenv", to see how source and setenv is done.  This account is normally setup for minimal immersive environment.<br>
+<br>
+
+<H4>Setting up CAVE environment for CAVE applications:</H4>
+&nbsp;&nbsp;&nbsp;&nbsp;
+If installation of environment above is done correctly, you should now see a path to<br>
+<br>
+/lusr/CAVE/bin<br>
+<br>
+This is where some of useful tools reside.  There is one thing you must do before running any CAVE application.  You must configure CAVE environment via configuration file.  Above script to set up your user environment has put a file, called ".caverc" in your home directory.  This is where you set your own environment.  CAVElib will look into 3 config files in the order of<br>
+<br>
+/lusr/CAVE/etc/cave.config<br>
+/lusr/CAVE/etc/milagros.tacc.utexas.edu.config<br>
+${HOME}/.caverc<br>
+<br>
+This is just like your system environment variables.  Whatever defined later will override previously defined.  Whatever you define in .caverc has the highest priority and overrides everything.  Look at these files and know what your options are.  If you do not want to mess with it and just wanting to run CAVE application, just leave rename it as something else and create an empty file ".caverc".  System wide set up for ACES VisLab is going to be used as default.<br>
+<br>
+
+<H4>Some useful tools:</H4>
+&nbsp;&nbsp;&nbsp;&nbsp;
+There are few tools that become handy when you are configuring your .caverc or testing your environment.  These utilities are stored in<br>
+<br>
+/lusr/CAVE/bin<br>
+<br>
+Here is what they do.<br>
+<br>
+&nbsp;&nbsp;
+CAVE_rc_cleanup-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+will clean up resources left around in the system by trackd and CAVE applications.  There is no option to issue the command.<br>
+<br>
+&nbsp;&nbsp;
+cavevars-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+will display 3-D cross on your screen, showing where your wand is in relation to your head.  This also shows if your 3 input buttons are working correct.<br>
+<br>
+&nbsp;&nbsp;
+createCaveScreen_ACESVL-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+will print out screen settings needed to for .caverc to configure CAVE environment.  For example, "createCaveScreen_ACESVL 8" will give you a setting for 8 segments in front screen, and 5 segments on back by using pipe0 for front and pipe[1-5] on back.  Send to <A HREF="mailto:makoto@tacc.utexas.edu">makoto@tacc.utexas.edu</A> if there is bugs.If you do not want back screens, just comment out last 5 entries.  Why do we want to have segments on front screen?  Please read later section, Walls in Configuring .caverc file.<br>
+<br>
+&nbsp;&nbsp;
+dummytrackd-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+will behave as trackd with a fake predefined input.  This is good for testing your own CAVE application.<br>
+<br>
+&nbsp;&nbsp;
+readtrackd-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+will read and print out tracker values that are received by trackd on your screen.  This is a good way to see if you are really receiving signals from your input device.<br>
+<br>
+
+<H4>Running more than 1 CAVE application:</H4>
+&nbsp;&nbsp;&nbsp;&nbsp;
+It will require more than 1 .caverc files.  The file ".caverc" is used as a default user config file when no option is specified in CAVE application.  Normally, you may specify a config file as<br>
+<br>
+A_CAVE_application -caveconfig some_another_config_file.config<br>
+<br>
+For example, if you are launching 3 cavevars (yes, cavevars is a CAVE utility) which displays are set to project in 3 distinct areas, you are issuing next 3 lines.<br>
+<br>
+> cavevars<br>
+> cavevars -caveconfig ~/.caverc2<br>
+> cavevars -caveconfig ~/.caverc3<br>
+<br>
+First cavevars will use ${HOME}/.caverc as config file that is equivalent to<br>
+<br>
+> cavevars -caveconfig ~/.caverc<br>
+<br>
+It is better to issue above commands from 3 separate shells due to messages/warnings.<br>
+<br>
+
+<H4>Configuring .caverc file:</H4>
+&nbsp;&nbsp;&nbsp;&nbsp;
+When you open ${HOME}/.caverc file, you will see some example entries in the file.  Here are some of most common items/rules.<br>
+<br>
+#:  "#" is used for comment.  Only that particular line that starts with "#" will be ignored by CAVElib.<br>
+<br>
+Walls:  The file has to start with "Walls".  This defines which screens are used in what order.  Names of screens can be anything.  It is just a set of screen identifier.  One thing I need to mention about ACES vislab is that front screen is curved.  If you simply project an image for a large frustum with a flat cut-plane, it will not project correctly.  What you can do is to chop up curved screen into several vertical narrower sections.  Then curvature will be less obvious.<br>
+<br>
+WallDisplay:  This is where you define your display output.  For example,<br>
+<br>
+WallDisplay screen6 :0.3 1280x2050+0+0<br>
+<br>
+means screen6 will use pipe 3 in 1280x2050 resolution with no x or y displacement.  Use a utility, "createCaveScreen_ACESVL" for easy configuration.<br>
+<br>
+ProjectionData:  This is where you map virtual space onto physical space.<br>
+<br>
+ProjectionData screen0 * wall -143 0 0  -143 122 0  -138 0 -40  inches<br>
+<br>
+<pre>
+means physical coordinate of screen0 is
+     x=-143 inches y=0 inches z=0 inches at left bottom corner of screen
+     x=-143 inches y=122 inches z=0 inches at left bottom corner of screen
+     x=-138 inches y=0 inches z=-40 inches at left bottom corner of screen
+</pre>
+from the center of vislab physical space.  The center of vislab physical space is about the center of radius in front curved screen, marked by blue tape on the floor.  The coordinate system that is used here is right hand rule, which x-axis vector runs left to right edges of curved screen, y-axis vector runs perpendicular to the floor to ceiling and z-axis vector runs perpendicular to the center bottom of curved screen(also perpendicular to x-axis on floor) towards back screens.  Our floor is xz-plane.<br>
+<br>
+DisplayMode:  set "mono" as regular display view, and "stereo" as a stereo view that will use stereo glass in vislab.<br>
+<br>
+StereoBuffer:  set "n" if DisplayMode is "mono", and "y" if DisplayMode is "stereo".<br>
+<br>
+TrackerType:  If you are getting input from tracker, leave it as "daemon".  If you want to control via keyboard/mouse, set as "simulator".<br>
+<br>
+InterocularDistance:  This defines how wide the centers of your eye balls are, thus defines the degree of separation of stereo view.  Depending on data, stereo is often reversed.  To test it, flip your stereo glass upside-down to see if you get better stereo.  This is often easier if object on the display is moving.  If stereo is reversed, set the number to negative for a quick fix.  Larger value gives more sense of stereo, and smaller number is easier on your eyes.  Though we recommend leaving it as default value of "2.7500 in".  This value does not affect if you set "DisplayMode" as "mono".  There is a related topic on this setting.  Please read later section, "Note about Stereo view".<br>
+<br>
+Simulator:  This is used to run CAVE application in simulator mode.  This option will switch several different options to fit to simulator mode.  This is what you should use to switch in-between immersive mode and simulator mode.  To turn simulator mode to "on", set it as "y".  Setting option to "n" is equivalent to not defining the option unless it is set earlier as "Simulator y".  It is always good to EXPLICITLY define.<br>
+<br>
+Entries here are only meant to be an introduction.  Please refer to CAVElib documents from VRCO for a full list.<br>
+<br>
+
+<H4>Switching keyboard:</H4>
+&nbsp;&nbsp;&nbsp;&nbsp;
+With out current set up for CAVElib on milagros, we take wand button signals from another keyboard/mouse instead of out head tracker, hiBall.  This is due to current hardware set up.  After launching CAVE application, switch keyboard/mouse of milagros console ("sgi1 1") from "ticam Lt 1" to "Edit B 5".  This will activate 3 buttons on the switch box of the wand.  Each buttons actually look like flip-switches.  You can push them away from you to push buttons(click), or pull towards you to lock(hold and drag) buttons.  It will release the lock when you push it away from you again.  From top to bottom, they are button 1, 2 and 3.  The only red push-button is the same as button 1.  It is arranged that way since 1st button is often used to only click, and 2nd/3rd buttons are often used to drag.  Normally we use the red button as 1st button for that reason.  Our current set up does not use the trigger on the grip of the wand.<br>
+<br>
+
+<H4>Note about stereo view:</H4>
+&nbsp;&nbsp;&nbsp;&nbsp;
+When your eyes are focusing to an object on the screen in any immersive environment, your eyes are trying to focus on 2 things in the same time.  One is an object that is displayed on the screen and other is a physical wall that object is displayed.  Often, we can not focus to objects on screen that are supposed to be close to us.  It is because the object is closer than what stereo system can define.  This is just like a sound with 8 speakers in each corners of a cube that is surrounding you.  This sound set up is to define sound source outside of the cube, but not anywhere inside.  In immersive environment, display walls act as a cut-plane of your view.  It is a window to see outside.  One thing you can do to help this is to walk towards physical screen.  This helps to fill the gap in-between virtual distance and physical distance.  Of course, it is better not to display something too close to the view point.<br>
+<br>
+
+<H4>More documents:</H4>
+&nbsp;&nbsp;&nbsp;&nbsp;
+This document is meant to be an introduction.  There is a whole set of CAVElib related documents from VRCO.  Please refer to documents at<br>
+<br>
+/lusr/CAVE/doc<br>
+<br>
+
+</UL>
+</font>
+
+<center>
+<hr width=512>
+<br>
+makoto@tacc.utexas.edu<br>
+ACES 2.340<br>
+(512)475-6954<br>
+<br>
+<A HREF="http://www.tacc.utexas.edu">
+TEXAS Advanced Computing Center</A><br>
+<A HREF="http://www.tacc.utexas.edu/resources/vislab">
+Visualization and Data Analysis Group</a><br>
+<br>
+<hr width=512>
+<br>
+updated: March 11th 2006<br>
+<br>
+</center>
+<br>
+
+</BODY>
+</HTML>

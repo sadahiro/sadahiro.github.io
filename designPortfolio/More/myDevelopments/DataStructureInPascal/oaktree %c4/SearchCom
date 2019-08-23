@@ -1,0 +1,57 @@
+unit SearchCom;
+{Programmer:	Makoto Sadahiro }
+{starting date: Dec 12th '93}
+{last modified date:  Dec 12th '93}
+
+{SearchCom is series of Searching commands for Oak Tree}
+interface
+	uses
+		IFaceUtil, IOOC, bstType, bstadt;
+
+{search for perticular name key from tree}
+	procedure FindFromTree (var myTree: TreeType);
+	{in: tree, keyname}
+	{out: info of key neme}
+	{pre: tree exists}
+{prints out tree in alphabetical order}
+	procedure PrintOutTree (var myTree: TreeType);
+	{in: tree}
+	{out: info of keynames}
+	{pre: tree exists}
+{*************************************}
+implementation
+
+	procedure FindFromTree (var myTree: TreeType);
+		var
+			nameLength: integer;
+			stuNode, NodeCopy: TreeElementType;
+			doneName, there: boolean;
+	begin
+		doneName := false;
+		while not (doneName) do
+			begin
+				writeln('	name has to be less than 12 charactors');
+				write('nameToBeSearched>');
+				readln(stuNode.key);
+				nameLength := length(stuNode.key);
+				if nameLength <= preferedNamelength then
+					doneName := true
+				else
+					writeln('name too long');
+			end;		{while not (doneName) do}
+		RetrieveElement(myTree, stuNode.key, NodeCopy, there);
+		if (there) then
+			PrintNode(NodeCopy)
+		else
+			writeln('name ', stuNode.key, ' does not exists');
+	end;		{FindFromTree}
+{*************************************}
+
+	procedure PrintOutTree (var myTree: TreeType);
+	begin
+		PrintInOrder(myTree);
+	end;		{PrintOutTree}
+{*************************************}
+
+{*************************************}
+end.		{SearchCom}

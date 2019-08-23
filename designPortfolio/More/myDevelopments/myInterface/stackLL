@@ -1,0 +1,102 @@
+unit stackLL;
+{stackADT linked list version}
+
+interface
+	type
+		StackElementType = char;
+
+		NodePtrType = ^StackNodeType;
+		StackNodeType = record
+				Info: StackElementType;
+				Next: NodePtrType
+			end;				{StackNodeType}
+		StackType = NodePtrType;
+
+	var
+		Stack: StackType;
+		Item: StackElementType;
+
+	procedure CreateStack (var Stack: StackType);
+(* Initializes Stack to empty state. *)
+	procedure DestroyStack (var Stack: StackType);
+(* Destroys all elements in stack, leaving Stack empty. *)
+	function EmptyStack (Stack: StackType): Boolean;
+(* Returns True if Stack is empty; returns False otherwise. *)
+	function FullStack (Stack: StackType): Boolean;
+(* Returns True if Stack is full; returns False otherwise. *)
+	procedure Push (var Stack: StackType; Item: StackElementType);
+(* Adds NewElement to the top of Stack. Assumes that the *)
+(* stack is not full.                                    *)
+{pre:    Stack is not empty}
+	procedure Pop (var Stack: StackType; var Item: StackElementType);
+(* Removes the top element from Stack and returns its *)
+(* value in PoppedElement. Assumes that the stack is  *)
+(* not empty.                                         *)
+
+(***************************************************************)
+implementation
+
+	procedure CreateStack (var Stack: StackType);
+
+	begin (* CreateStack *)
+		Stack := nil
+	end;  (* CreateStack *)
+
+(****************************************************************)
+
+	procedure DestroyStack (var Stack: StackType);
+		var
+			Tptr: NodePtrType;
+
+	begin (* DestroyStack *)
+		while Stack <> nil do
+			begin
+				Tptr := Stack;
+				Stack := Stack^.Next;
+				dispose(Tptr)
+			end				{while}
+	end;  (* DestroyStack *)
+
+(****************************************************************)
+
+	function EmptyStack (Stack: StackType): Boolean;
+
+	begin (* EmptyStack. *)
+		EmptyStack := (Stack = nil)
+	end; (* EmptyStack *)
+
+(****************************************************************)
+
+	function FullStack (Stack: StackType): Boolean;
+
+	begin (* FullStack *)
+		FullStack := false
+	end; (* FullStack *)
+
+(****************************************************************)
+
+	procedure Push (var Stack: StackType; Item: StackElementType);
+		var
+			TPtr: NodePtrType;
+	begin (* Push *)
+		TPtr := Stack;
+		new(Stack);
+		Stack^.Next := TPtr;
+		Stack^.Info := Item
+	end; (* Push *)
+
+(****************************************************************)
+
+	procedure Pop (var Stack: StackType; var Item: StackElementType);
+		var
+			TPtr: NodePtrType;
+
+	begin (* Pop *)
+		Tptr := Stack;
+		Stack := Stack^.Next;
+		Item := TPtr^.Info;
+		dispose(TPtr)
+	end; (* Pop *)
+
+(****************************************************************)
+end.  { unit }

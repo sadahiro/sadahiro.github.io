@@ -1,0 +1,182 @@
+                                                              March 11th 2006
+  Makoto Sadahiro
+
+    Virtual Reality / Scientific Visualization Specialist
+
+Contact:
+    makoto@tacc.utexas.edu
+    www.tacc.utexas.edu/~makoto
+
+    2002-A Guadalupe Street, #102, Austin TX 78705
+      (512)413-1515
+
+Specialty:
+    Scientific Visualization, Scientific Data Processing
+    Immersive Environment (Virtual Reality) and User Interface
+
+Interests:
+    System Engineering and User Interface for Immersive Environment,
+    Remote Visualization Methods, Information Visualization/Auralization
+
+Education:
+    Computer Science (B.S. 2002)
+                      University of Texas at Austin
+    Computer Science (B.A. 2001)
+                      University of Texas at Austin
+    Photo/Electronic Imaging (B.F.A. 1995)
+                      University of Massachusetts at Dartmouth
+
+
+Professional experience:
+ 07 '03 - present
+  Scientific Visualization Specialist/Consultant
+       Texas Advanced Computing Center: Visualization and Data Analysis Group
+          The University of Texas Austin
+
+  - System integration and development for immersive environment to enable:
+     - various multi-pipe graphics systems
+        - SGI Onyx2, SGI Prism(IA-64 Linux), Sun Fire E25K modified, etc
+     - driving 13 projectors in 360 degrees surround-display system
+     - active-stereo 3-D viewing
+     - optical head-tracking device conjunction with a wand for 3-D space
+     - input methods: physical buttons, alphanumeric via PDA
+     - haptic-feedback (vibration motor, etc)
+  - Hardware/software development of unsupported/additional devices
+      for immersive environment:
+     - integration of wireless PDA device to enable alphanumeric input
+     - adding physical buttons
+     - text messaging from server to wand
+     - haptic feedback (vibration motor, etc)
+  - General visualization consultation in a production/academic setting:
+     - guiding faculty/researchers/students for their visualization needs
+     - coding/scripting utilities for special needs
+     - creating visualization by using commercial software
+  - System deployment related work for production systems:
+     - working closely with system administrator
+     - experimental hardware testing/setup for remote visualization system
+     - software evaluation and install validations
+  - Working with vendors for customization of software/hardware
+  - Managing/Guiding students in training, small projects and lab work
+
+  Publication / Presentation related:
+  - Implementation of users guide/documentation on:
+     - production graphics system
+     - immersive environment
+       (headtracker, software, system environment, etc)
+  - Coordinating scientific visualization trainings:
+     - implementation of course contents
+     - evaluation/installation of remote training methods
+        - Web streaming hardware/software, etc
+     - vendor specific software training
+  - Hands-on visualization demonstration of scientific data
+     - general Visualization Lab use
+     - immersive environment
+     - demo at IEEE Visualization, IEEE Supercomputing
+
+  Current projects:
+    - Usability for immersive environment
+       - library for additional input methods in immersive environment
+       - example code for immersive environment development
+    - Testing new platform for immersive environment
+
+  Current investigations:
+    - distributed computing for visualization
+    - video streaming over network
+
+  Platforms: Linux, IRIX, Solaris, Mac OS X, Microsoft Windows,
+             Pocket PC (Windows CE), OOPic
+
+  Tools: C/C++, CAVElib, VRPN, OpenGL/Inventor, VRML, amira, AVS,
+         vGeo, VRScape, Paraview, etc
+
+
+ 01 '03 - 06 '03
+  Software Developer
+       MRI Systems Design
+          Hitachi Medical Corporation, Japan
+
+  - Various tasks related to Hitachi's Medical MRI scanner systems:
+     - integrity/conformance testing of current software to interface DICOM
+     - creation of test environment for DICOM standard
+     - testing compatibility with other MRI/medical systems manufactures
+     - specifications and investigation of feasibility for new imaging system
+     - software maintenance/development for MRI's operation software
+     - technical investigation for import/export regulation on data encryptions
+     - various negotiations with outside vendors
+     - demonstrations in medical trade shows
+
+  Platforms: Linux, Solaris, Microsoft Windows
+
+  Tools: C/C++, Motif, SSL, shell script, Central Testing Node,
+         public domain tools
+
+
+ 06 '98 - 01 '01
+  Full-time Research Engineer / Undergraduate Research Assistant
+       Center for Computational Visualization
+          Texas Institute for Computational and Applied Mathematics
+             The University of Texas Austin
+
+  - Creation and administration of scientific data repository
+  - Implementation of automated demonstration for repository data
+  - Data processing and implementation of software tools for scientific data
+       - conversion, adjustment, validation, etc
+       - fossil(CT), medical(CT/MRI/RGB), geophysics(Seismic)
+       - iso-contour/iso-surface of volume data and 3-D geometric data
+  - Recovery/documentation of undocumented custom software and data
+  - Specification of in-house multipurpose file format
+
+  Platforms: Linux, IRIX, Microsoft Windows, Solaris, Macintosh OS, NEXTSTEP
+
+  Tools: C/C++, Tcl/Tk, shell script, UNIX tools, VRML and OpenInventor,
+         in-house proprietary software, HTML, 3D StudioMax, Lightwave,
+         OpenDX, Adobe Photoshop/Premier, SoftImage|DS
+
+
+ 08 '95 - 03 '96
+  Lead Visual Game Designer/Artist
+       HouseWorks Software Inc. Austin, Texas
+
+  - Various aspects of design/art work for 3-D shooter game
+     - developing game concept and environment of game world
+     - design of enemy characters, custom textures library
+
+  Platforms: Macintosh OS
+
+  tools: Strata StudioPro, Photoshop, in-house proprietary software,
+         Macromedia Director, PageMaker, etc
+
+
+ '93 - '95
+  Multimedia lab assistant/consultant
+       Hypermedia lab, College of Visual Performing Arts
+          University of Massachusetts Dartmouth
+
+  - Technical consultation on:
+     - 3-D modeling/animation
+     - photo manipulation
+     - interactive media
+  - Assisting faculty/student's general computer use
+
+  Platforms: Macintosh OS, Amiga-OS Workbench, VMS
+
+  Tools: Adobe Photoshop, Macromedia Director, Infini-D, Quark Xpress,
+         Imagine, Microsoft Word, Symantec tools, etc
+
+
+ summer '92
+  3-D modeler/animator
+       Hyper Active Inc., Quincy, Massachusetts
+
+  - Creation of 3-D animation for company logos
+
+  Platform: Macintosh OS
+
+  Tools: Infini-D, Adobe Photoshop, Macromedia Director, etc
+
+
+
+Etc:
+
+ Other interests: Aikido, Radio control sailplane, cello, etc
+

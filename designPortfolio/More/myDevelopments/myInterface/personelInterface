@@ -1,0 +1,137 @@
+unit personelInterface;
+interface
+	procedure OpenTextWindow (l, t, r, b: integer);
+
+	procedure OpenDrawingWindow (l, t, r, b: integer);
+ {to open drawing window with your given size }
+{ order, left edge position, top edge, right edge , bottom edge}
+
+	procedure drawStr (str: string; h, v: integer);
+{this procedure draw string in the drawing window}
+{l,t,r,b is rect position , and h, v position on the screen}
+
+	procedure drawstrwithsound (str: string; h, v: integer);
+{print out the string with sound }
+	function DoneClicked (where: point; grect: rect): boolean;
+{this function work for determination of clicking a specific point }
+
+	procedure makeIcon (str: string; h, v: integer; var grect: rect);
+{this procedure make a icon }
+
+implementation
+
+	procedure OpenTextWindow (l, t, r, b: integer);
+{to open text window you given size}
+		var
+			bound: rect;
+	begin
+		setrect(bound, l, t, r, b);
+		SetTextRect(bound);
+		ShowText;
+	end;
+{*************************************************}
+
+	procedure OpenDrawingWindow (l, t, r, b: integer);
+ {to open drawing window with your given size }
+{ order, left edge position, top edge, right edge , bottom edge}
+		var
+			bound: rect;
+	begin
+		setRect(bound, l, t, r, b);
+		SetDrawingRect(bound);
+		ShowDrawing
+	end; {Open Drawing Window}
+{***********************************************}
+
+	procedure drawStr (str: string; h, v: integer);
+{this procedure draw string in the drawing window}
+{l,t,r,b is rect position , and h, v position on the screen}
+		var
+			messRect: rect;
+	begin
+		Moveto(h, v);
+		Drawstring(str);
+	end; {drawStr}
+{************************************************}
+
+	function DoneClicked (where: point; grect: rect): boolean;
+{this function work for determination of clicking a specific point }
+		var
+			theEvent: eventrecord;
+		var
+			dummyboolean: boolean;
+	begin
+		repeat
+			dummyboolean := GetnextEvent(everyEvent, theEvent);
+		until (theEvent.what = MouseDown);
+
+		getmouse(where);
+		if PtinRect(where, grect) then
+			begin {compond }
+				DoneClicked := true;
+				invertRect(grect);
+				while waitMouseUP do
+ {nothing until mouse up}
+			end
+		else
+			Doneclicked := false
+
+	end; {Done cliceked}
+
+{*******************************************************}
+
+	procedure makeIcon (str: string; h, v: integer; var grect: rect);
+{this procedure make a icon }
+		var
+			l, t, r, b: integer;
+	begin
+		l := h - 1;
+		t := v - 15;
+		r := h + 100;
+		b := v + 5;
+		setrect(grect, l, t, r, b);
+		moveto(h, v);
+		Drawstring(str);
+		Framerect(grect);
+	end; {Make Icon }
+
+{****************************************************}
+
+	procedure soundy;
+	begin
+		note(220, 10, 2);
+		note(200, 10, 2);
+	end;
+{******************************************************}
+
+	procedure drawstrwithsound (str: string; h, v: integer);
+		var
+			charbox: packed array[0..40] of char;
+		var
+			chara: char;
+		var
+			num, num1, width: integer;
+	begin
+		num := 1;
+		num1 := length(str); {get number of string}
+		repeat
+			charbox[num] := copy(str, num, num + 1);
+			num := num + 1;
+		until num > num1;
+		num := 1;
+		width := charwidth('a');
+		repeat
+			if (charbox[num] <> ' ') and (charbox[num] <> ',') then
+				soundy
+			else
+				note(1, 1, 15);
+			moveto(h, v);
+			DrawChar(charbox[num]);
+			num := num + 1;
+			h := h + width + 1;
+		until num > num1;
+
+	end;
+
+{****************************************************}
+end. {unit}

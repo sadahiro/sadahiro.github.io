@@ -1,0 +1,212 @@
+<HTML>
+<HEAD>
+<TITLE>Immersive Environment</TITLE>
+</HEAD>
+
+<BODY TEXT="#ffffff" LINK="#ccbbcc" VLINK="#88aacc" BGCOLOR="black">
+
+<H2>
+&nbsp;&nbsp;&nbsp;
+<font color=#ff4444>I</font>
+<font color=white>
+mmersive Environment in the ACES Visualization Lab</font>
+</H2>
+
+<font color=#ffffcc>
+<H4>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Introduction and setting up your account for Immersive Environment
+</H4>
+</font>
+
+<UL>
+<font color="#cccccc">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+File: milagros.tacc.utexas.edu:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/lusr/immersive_env/doc/milagros_tacc_utexas_edu_README.txt<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Contact: Makoto Sadahiro makoto@tacc.utexas.edu<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Date written: January 23, 2004<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Date updated: March 11, 2006<br>
+<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+The ACES VisLab offers an immersive environment to the users.  It is equipped with nearly 360 degree surrounding display driven by 13 projectors, mono/stereo view, surrounding sound, flight stick/throttle and motion tracking.  We have certain default setup that users can jump into the system and start using the system.  There is some necessary learning for importing users' own data, but consulting from TACC will be always provided.<br>
+<br>
+This document describes how to configure and your account to use immersive environment in ACES Visualization Lab.  Later section also describes how to communicate with tracking device when you are writing your own applications.<br>
+<br>
+</font>
+</UL>
+
+<UL>
+Immersive Environment Users Guide:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+Following links get into more details of particular areas of our immersive environment setup.  Please refer them after reading this page.<br>
+<br>
+<UL>
+<font color=#cccccc>
+<A HREF="./hiBall.html">3rdTech hiBall Tracker</A>
+: tracking device and client node side daemon to fetch tracking signal<br>
+<A HREF="./CAVElib.html">CAVElib</A>
+: one of the most common immersive environment API<br>
+<A HREF="./trackd.html">trackd</A>
+: tracker daemon for VRCO CAVElib<br>
+<A HREF="./vGeo.html">
+vGeo for immersive environment</A>
+: a CAVE application for visualization<br>
+</font>
+<br>
+</UL>
+&nbsp;&nbsp;&nbsp;&nbsp;
+Also, following is the guide to our main immersive environment visualization node.<br>
+<br>
+<UL>
+<A HREF="../documents/Milagros_UsersManual.htm">
+milagros(SGI Onyx2) Users Guide</A>
+: guide to our main visualization local node<br>
+<br>
+</UL>
+</UL>
+
+<UL>
+<H4>Overview of hardware:</H4>
+&nbsp;&nbsp;
+Screen-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+The immersive environment at the ACES VisLab is equipped with a 180 degrees curved front screen and 2rows x 5columns flat panels that covers the other 180 degrees.  These screens are facing each other, so you will have screen space of 360 surrounding degrees.<br>
+<br>
+&nbsp;&nbsp;
+Stereo glass-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+The front projection system is capable of displaying in stereo.  We use crystallized glasses that syncs with infrared pulses, emitted from 3 emitters on top of front curved screen.<br>
+<br>
+&nbsp;&nbsp;
+Motion tracking-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+For motion tracking, we use 3rdTech's hiBall system.  The hiBall is an optical tracking system, which is capable of very precise tracking.  Our current configuration for the system comes with 2 positional/rotational sensors, one for head tracking and the other for wand tracking.  The wand is currently set up for 3 buttons configuration.  We have plans for future expansion to input devices.  The hiBall system is capable of providing tracking signals to multiple requests simultaneously.  This will allow multiple applications that use tracking signal to be running in the same time.<br>
+<br>
+&nbsp;&nbsp;
+Tracker client-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+Even several visualization nodes are capable of running out immersive environment, we mainly use sgi as the tracking system client for most of our needs.  We provide client-side daemon, "hiBall_client", for sgi that fetches the tracking signal.  It is very easy to write your own code that communicates with the daemon to receive the tracking signal.<br>
+<br>
+&nbsp;&nbsp;
+Application/library-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+The vGeo/CAVElib from VRCO is installed on sgi, "milagros.tacc.utexas.edu", which is our main computer for scientific visualization.  The vGeo was originally developed for the visualization of oceanographic data, but can be used for quite various kinds of data.  The vGeo runs on top of CAVElib, which is a great library to develop users' own immersive applications.<br>
+<br>
+
+<H4>Common environment in the VisLab:</H4>
+&nbsp;&nbsp;&nbsp;&nbsp;
+The ACES VisLab is already well configured for the use of the vGeo for immersive environment.  In ACES VisLab, it is set up in the way vGeo will drive all screens in 360 degrees by using all 13 projectors via all 6 sgi graphics pipes.  The area of display is fully and easily configurable by each user via CAVElib configuration file.  Due to our current hardware set up, only front curved screen is set up to be capable in stereo-mode.  This requires the use of stereo glass that is available in VisLab.  Normally, unless it is run in a simulator mode, a head tracking device with wand is used for input device to drive vGeo.<br>
+<br>
+
+<H4>Tracking Signal Flow:</H4>
+&nbsp;&nbsp;&nbsp;&nbsp;
+In VisLab as of March 2006, trackd-daemon, hiBall_client-daemon is used to fetch input signals from hiBall head tracking device.  The tracking signal flow is as follows.<br>
+
+<pre>
+                                *hiBall System (Tracking Signal Server)
+
+
+hiBall ( Head tracker + Wand + Buttons box )
+   |             /              /      \
+   |            /              /        \
+   |-(tether)  /-(tether)     /-(tether) \
+   |          /              /            \
+hiBall Interface Box <-(*hiBall revision)--\------IR blocking sensor box
+   |                                        \
+   |-(parallel cable)                        \
+   |                                       (PS/2 cable)
+hiBall server (Dell win2K)                   *used as back up after
+   |                                          the revision of hiBall
+----------------------------              
+   |
+   |
+   |
+   | *Network
+   |
+   |
+   |
+----------------------------
+   |
+  hiBall_client             *visualization node (Tracking Signal Client)
+   |
+   |-(named-pipe)
+   |
+  trackd-module
+   |
+  trackd
+   |
+   |-(shared memory)
+   |
+  CAVElib
+   |
+   |
+  CAVE applications
+
+
+
+</pre>
+
+&nbsp;&nbsp;&nbsp;&nbsp;
+It is technically possible to run multiple Tracking Signal Clients, the machine where your application will run.  Or you can run multiple copies of hiBall_client to server multiple applications on the same client machine.<br>
+<br>
+
+<H4>The environment installation:</H4>
+&nbsp;&nbsp;&nbsp;&nbsp;
+There is a script to set up visualization environment.  The scrip will setup your account for hiBall, CAVElib and vGeo.  Running this script will be the easiest way to set up your user account for immersive environment.  Issue the following command.<br>
+<br>
+> /lusr/immersive_env/bin/create_immersive_env.milagros_tacc_utexas_edu.csh<br>
+<br>
+This script assumes you are using csh/tcsh.  If you are using another type of shell, please talk to us.  The script will create few files in your home directory.  The script will also add a line<br>
+<br>
+source ${HOME}/.milagros_env<br>
+<br>
+at the end of .cshrc in your home directory.  This is your original sourcing point to all of environment that you will need for the immersive environment on milagros.tacc.utexas.edu.  Now, environment installation is done.  Issue a command<br>
+<br>
+> source ~/.cshrc<br>
+<br>
+to let new setup to take effect, or you may re-login.  Now your account is setup.<br>
+<br>
+<br>
+
+<H4>At the end:</H4>
+&nbsp;&nbsp;&nbsp;&nbsp;
+This document is meant to be an introduction.  There is a whole set of vGeo related documents from VRCO.  Please refer to documents at<br>
+<br>
+/lusr/vGeo/doc<br>
+<br>
+Most importantly again:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+Read *.README in /lusr/CAVE/doc directory.  vGeo IS a CAVElib application.  I have omitted most of CAVElib related topics here, so PLEASE read README for CAVElib.<br>
+<br>
+
+</UL>
+</font>
+
+<center>
+<hr width=512>
+<br>
+makoto@tacc.utexas.edu<br>
+ACES 2.340<br>
+(512)475-6954<br>
+<br>
+<A HREF="http://www.tacc.utexas.edu">
+TEXAS Advanced Computing Center</A><br>
+<A HREF="http://www.tacc.utexas.edu/resources/vislab">
+Visualization and Data Analysis Group</a><br>
+<br>
+<hr width=512>
+<br>
+updated: March 11th 2006<br>
+<br>
+</center>
+<br>
+
+</BODY>
+</HTML>

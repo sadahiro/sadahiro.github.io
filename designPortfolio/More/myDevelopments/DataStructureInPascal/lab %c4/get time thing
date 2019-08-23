@@ -1,0 +1,10 @@
+ const
+include_seconds=true;
+var
+myTimeString:str255;
+dateTime:longint;
+
+getDateTime(dateTime);
+IUTimeString(dateTime, INCLUDE_SECONDS, myTimeString);
+writeln(myTimeString);
+{gettime(timegota);}

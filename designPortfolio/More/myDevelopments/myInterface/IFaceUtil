@@ -1,0 +1,23 @@
+unit IFaceUtill;
+{Programmer:	Makoto Sadahiro }
+{starting date: Nov 9th '93}
+{last modified date:  Nov 10th '93}
+
+{this unit is series of utility for interface}
+
+interface
+	procedure Wait;
+{*************************************}
+
+implementation
+
+	procedure Wait;
+	begin
+		while (not Button) do
+			begin
+			end
+	end;
+{*************************************}
+
+{*************************************}
+end.				{IFaceUtill}

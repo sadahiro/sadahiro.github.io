@@ -1,0 +1,85 @@
+unit stackADT;
+
+(***************************************************************)
+(*                        STACK ADT                            *)
+(*                (Array-based Implementation)                 *)
+(***************************************************************)
+interface
+	const
+		MaxStack = 80;
+	type
+		StackElementType = char;
+		StackType = record
+				Elements: array[1..MaxStack] of StackElementType;
+				Top: 0..MaxStack
+			end; (* StackType *)
+
+	procedure CreateStack (var Stack: StackType);
+(* Initializes Stack to empty state. *)
+	procedure DestroyStack (var Stack: StackType);
+(* Destroys all elements in stack, leaving Stack empty. *)
+	function EmptyStack (Stack: StackType): Boolean;
+(* Returns True if Stack is empty; returns False otherwise. *)
+	function FullStack (Stack: StackType): Boolean;
+(* Returns True if Stack is full; returns False otherwise. *)
+	procedure Push (var Stack: StackType; NewElement: StackElementType);
+(* Adds NewElement to the top of Stack. Assumes that the *)
+(* stack is not full.                                    *)
+	procedure Pop (var Stack: StackType; var PoppedElement: StackElementType);
+(* Removes the top element from Stack and returns its *)
+(* value in PoppedElement. Assumes that the stack is  *)
+(* not empty.                                         *)
+
+(***************************************************************)
+implementation
+
+	procedure CreateStack (var Stack: StackType);
+
+	begin (* CreateStack *)
+		Stack.Top := 0
+	end;  (* CreateStack *)
+
+(****************************************************************)
+
+	procedure DestroyStack (var Stack: StackType);
+
+	begin (* DestroyStack *)
+		Stack.Top := 0
+	end;  (* DestroyStack *)
+
+(****************************************************************)
+
+	function EmptyStack (Stack: StackType): Boolean;
+
+	begin (* EmptyStack. *)
+		EmptyStack := Stack.Top = 0
+	end; (* EmptyStack *)
+
+(****************************************************************)
+
+	function FullStack (Stack: StackType): Boolean;
+
+	begin (* FullStack *)
+		FullStack := Stack.Top = MaxStack
+	end; (* FullStack *)
+
+(****************************************************************)
+
+	procedure Push (var Stack: StackType; NewElement: StackElementType);
+
+	begin (* Push *)
+		Stack.Top := Stack.Top + 1;
+		Stack.Elements[Stack.Top] := NewElement
+	end; (* Push *)
+
+(****************************************************************)
+
+	procedure Pop (var Stack: StackType; var PoppedElement: StackElementType);
+
+	begin (* Pop *)
+		PoppedElement := Stack.Elements[Stack.Top];
+		Stack.Top := Stack.Top - 1
+	end; (* Pop *)
+
+(****************************************************************)
+end.  { unit }

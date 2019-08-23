@@ -1,0 +1,28 @@
+unit bstType;
+{Programmer:	Makoto Sadahiro }
+{starting date: Dec 11th '93}
+{last modified date:  Dec 11th '93}
+
+{type of bstadt for Oak Tree}
+
+interface
+
+	const
+		namelength = 20;
+		preferedNamelength = 12;
+	type
+		MajorType = (ART, BIS, CIS, CPE, DOG, ELE, MTH);
+		LivingType = (C, H, R);
+
+		keyType = string[namelength];
+		TreeElementType = record
+				key: keyType;
+		{whatever put it in}
+				major: MajorType;
+				living: LivingType;
+			end;
+{*************************************}
+implementation
+
+{*************************************}
+end.		{bstType}

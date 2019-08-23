@@ -1,0 +1,212 @@
+unit ucards;
+{Programmer:	Makoto Sadahiro }
+{starting date: sep 27th '93}
+{last modified date: oct 6th '93}
+
+{unit ucards is utility unit, the series of procedures which is used for cards games}
+{which is initDeck, shuffleDeck, doDeal, printDeck, printHoner, printHands}
+
+interface
+	const
+		shuffleTime = 50;		{defining shuffle time in "procedure shuffleDeck"}
+		valueLength = 6;			{the length of "myDeck[myPosition].value" in printDeck and " 'Ace' in printHand}
+	type
+		direction = (north, west, east, south);
+		suits = (club, diamond, heart, spade);
+		card = record
+				suit: suits;
+				value: 1..13
+			end;			{card contains both information of value and suit}
+		deck = array[1..52] of card;			{deck is 52 of cards}
+		hand = array[1..13] of card;			{hands is 13 of cards in each players}
+		seats = array[north..south] of hand;	{there are 4 seats}
+
+{procedure initDeck will put cards from 1 to 13 of each suite in the same order as suits in order}
+	procedure initDeck (var myDeck: deck);
+{in: array of record "deck"}
+{out: arrayof record "deck"}
+{pre: contents of array is 0}
+{post: contents of array is from 1 to 13 of each suits in order}
+
+{procedure shuffleDeck will shuffle contents of array of record "deck"}
+	procedure shuffleDeck (var myDeck: deck);
+{in: array of record "deck"}
+{out: arrayof record "deck"}
+{pre: contents of array is from 1 to 13 of each suits in order}
+{post: contents of array is from 1 to 13 of each suits in random order}
+
+{procedure shuffleDeck will shuffle contents of array of record "deck"}
+	procedure doDeal (var myDeck: deck; var mySeats: seats);
+{in: array of record "deck" and "seats"}
+{out: arrayof record "deck" and "seats"}
+{pre: contents of array is from 1 to 13 of each suits in random order in deck, and empty seats}
+{post: empty deck, and contents of array is from 1 to 13 of each suits in seats}
+
+{print out content of deck}
+	procedure printDeck (myDeck: deck);
+{in: array of record "deck"}
+{out: print out of deck on screen}
+{pre: contents of array is from 1 to 13 of each suits in random order}
+{post: contents of array is from 1 to 13 of each suits in random order-no change}
+
+{print out honer point for each players on table****this should be used inside of procedure printHands*****}
+	procedure printHoner (var mySeats: seats; myPlayer: direction);
+{in: array of array of record "seats", direction of player}
+{out: print out of honer point on screen}
+{pre: contents of array is from 1 to 13 of each suits in each seats after it is dealed}
+{post: contents of array is from 1 to 13 of each suits in each seats after it is dealed-no change}
+
+{print out contents of each hands of players}
+	procedure printHands (mySeats: seats);
+{in: array of array of record "seats"}
+{out: print out of hands on screen}
+{pre: contents of array is from 1 to 13 of each suits in each seats after it is dealed}
+{post: contents of array is from 1 to 13 of each suits in each seats after it is dealed-no change}
+{****************************************************************}
+
+implementation
+
+	procedure initDeck (var myDeck: deck);
+		var
+			suitsIndex: suits;
+			j, myPosition: integer;			{temporary variables}
+
+	begin
+		myPosition := 0;			{initializing the position of process}
+		for suitsIndex := club to spade do			{will repeat 4 times}
+			for j := 1 to 13 do						{will repeat 13 times}
+				begin
+					myPosition := myPosition + 1;		{moving to next position of array}
+					myDeck[myPosition].suit := suitsIndex;
+					myDeck[myPosition].value := j
+				end;
+		writeln;
+		writeln('new set of cards are ready')
+	end;			{ending initDeck}
+{*****************************}
+
+	procedure shuffleDeck (var myDeck: deck);
+		var
+			randomN: integer;
+			dateTime: longint;
+			times: integer;			{temporary variable}
+			temp: card;
+
+	begin
+		for times := 1 to shuffleTime do		{shuffleTime is defined as constant in beginning}
+			begin
+				GetDateTime(dateTime);			{getting data of time and date}
+				randSeed := dateTime;			{set randam seed}
+				randomN := random;				{get random number into variable "randomN"}
+				randomN := abs(randomN mod 52) + 1;
+				temp := myDeck[times];
+				myDeck[times] := myDeck[randomN];
+				myDeck[randomN] := temp
+			end;
+		writeln;
+		writeln('shuffling: done')
+	end;
+{*****************************}
+
+	procedure doDeal (var myDeck: deck; var mySeats: seats);
+		var
+			myPosition, mdCounter: integer;			{temporary variable}
+			myPlayer: direction;
+	begin
+		mdCounter := 0;
+		for myPosition := 1 to 13 do
+			for myPlayer := north to south do
+				begin
+					mdCounter := mdCounter + 1;
+					mySeats[myPlayer, myPosition] := myDeck[mdCounter]
+				end;
+		writeln;
+		writeln('dealing: done')
+	end;
+{*****************************}
+
+	procedure printDeck (myDeck: deck);
+		var
+			myPosition: integer;			{temporary variable}
+	begin
+		for myPosition := 1 to 52 do	{repeat 52 times till finish printing all 52 cards}
+			begin
+				writeln;
+				if (myDeck[myPosition].value = 1) or (myDeck[myPosition].value in [11..13]) then
+					begin
+						case myDeck[myPosition].value of
+							1: 
+								writeln(myDeck[myPosition].suit : 8, 'Ace' : valueLength);
+							11: 
+								writeln(myDeck[myPosition].suit : 8, 'Jack' : valueLength);
+							12: 
+								writeln(myDeck[myPosition].suit : 8, 'Queen' : valueLength);
+							13: 
+								writeln(myDeck[myPosition].suit : 8, 'King' : valueLength)
+						end	{end of case statement}
+					end		{end of if statement}
+				else
+					writeln(myDeck[myPosition].suit : 8, myDeck[myPosition].value : valueLength)
+			end
+	end;
+(**************************************************************)
+
+	procedure printHoner (var mySeats: seats; myPlayer: direction);
+		var
+			myPosition: integer;			{temporary variable}
+			point: integer;					{honer point}
+	begin
+		point := 0;
+		for myPosition := 1 to 13 do
+			if (mySeats[myPlayer, myPosition].value = 1) or (mySeats[myPlayer, myPosition].value in [11..13]) then
+				begin
+					case mySeats[myPlayer, myPosition].value of
+						1: 
+							point := point + 4;
+						11: 
+							point := point + 1;
+						12: 
+							point := point + 2;
+						13: 
+							point := point + 3
+					end	{end of case statement}
+				end;		{end of if statement}
+		writeln;
+		writeln('the honer point of player ', myPlayer, ' is ', point : 3);
+		writeln
+	end;
+(**************************************************************)
+
+	procedure printHands (mySeats: seats);
+		var
+			myPlayer: direction;
+			myPosition: integer;			{temporary variable}
+	begin
+		for myPlayer := north to south do	{repeat 4 times for each player}
+			begin
+				writeln;
+				writeln('the seat of ', myPlayer);
+				for myPosition := 1 to 13 do	{repeat 13 times till finish printing all 13 cards in a seat}
+					begin
+						writeln;
+						if (mySeats[myPlayer, myPosition].value = 1) or (mySeats[myPlayer, myPosition].value in [11..13]) then
+							begin
+								case mySeats[myPlayer, myPosition].value of
+									1: 
+										writeln(mySeats[myPlayer, myPosition].suit : 8, 'Ace' : valueLength);
+									11: 
+										writeln(mySeats[myPlayer, myPosition].suit : 8, 'Jack' : valueLength);
+									12: 
+										writeln(mySeats[myPlayer, myPosition].suit : 8, 'Queen' : valueLength);
+									13: 
+										writeln(mySeats[myPlayer, myPosition].suit : 8, 'King' : valueLength)
+								end	{end of case statement}
+							end		{end of if statement}
+						else
+							writeln(mySeats[myPlayer, myPosition].suit : 8, mySeats[myPlayer, myPosition].value : valueLength)
+					end;
+				printHoner(mySeats, myPlayer)				{print out honer point for each player}
+			end
+	end;
+(**************************************************************)
+end.		{unit ucards}

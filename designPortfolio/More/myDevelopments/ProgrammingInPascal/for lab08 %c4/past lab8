@@ -1,0 +1,77 @@
+program lab8 (input, output, datafile);
+	uses
+		Ecsten, IOreInOut;
+
+	var
+		stl := str255;
+		UserName, FileRead, FileWritten, LngstWrd: stl;
+		AndNum: integer;
+		NWLine, NELine: integer;
+
+{********IO control procedures ********}
+	procedure Prepare (var UserName, FileRead, FileWritten: stl);
+		var
+			sure: boolean;
+			Times: integer;
+	begin
+		Times := 1;
+		GetInput(UserName, FileRead, FileWritten, Times);
+		OpenFileIn(FileRead, sure);
+		while sure = false do
+			begin
+				Times := 2;
+				GetInput(UserName, FileRead, FileWritten, Times);
+				OpenFileIn(FileRead, sure)
+			end
+			OpenFileOut(FileWritten)
+	end;
+
+	procedure Close (var FileRead, FileWritten: stl);
+	begin
+		CloseFile(FileRead);
+		CloseFile(FileWritten)
+	end;
+
+	procedure PrintIt (UserName, FileRead, FileWritten: str255; NWLine, NELine: integer; LngstWrd: str255; AndNum: integer);
+	begin
+	end;
+
+{********EXECUTION control procedures ********}
+	procedure Charactorize (var Line, longest: str255; longestN: integer);
+		var
+			Retter: char;
+	begin
+{read ch from Line}
+		Charpitalize(Retter);
+		LongWord(Retter, longest, longestN);
+	end;
+
+	procedure ExecutionControl (longest: str255; longestN: integer; LineCounter, EmpLineCounter: integer);
+		var
+			Line: str255;
+			longest: str255;
+			LineCounter: integer;
+			EmpLineCounter: integer;
+			longestN: integer;
+	begin
+		LineCounter := 1;
+		EmpLineCounter := 1;
+		NRetter := 0;
+		longestN := 0;
+		while not eof(FileRead) do
+			begin
+				readln(FileRead, Line);
+				Charpitalize(Line, longest, longestN);
+				writeln(FileWritten, Line);
+				LineCounter := LineCounter + 1;
+				if length(Line) = 0 then
+					EmpLineCounter := EmpLineCounter + 1;
+			end;
+	end;
+{*******main*******}
+begin
+	Prepare(UserName, FileRead, FileWritten);
+	ExecutionControl(LngstWrd, AndNum, NWLine, NELine);
+	Close(FileRead, FileWritten);
+	PrintIt(UserName, FileRead, FileWritten, NWLine, NELine, LngstWrd, AndNum)
+end.

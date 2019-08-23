@@ -1,0 +1,40 @@
+unit IFaceUtil;
+{Programmer:	Makoto Sadahiro }
+{starting date: Nov 9th '93}
+{last modified date:  Nov 10th '93}
+
+{this unit is series of utility for interface}
+
+interface
+{OpenTextWindow will open up a window in preferent size}
+	procedure OpenTextWindow (l, t, r, b: integer);
+	{in: integers of coordinate for each side}
+	{out: text window}
+{wait will let program idle until user click the mouse button}
+	procedure Wait;
+	{in: none}
+	{out: none}
+{*************************************}
+
+implementation
+
+	procedure OpenTextWindow (l, t, r, b: integer);
+		var
+			bound: rect;
+	begin
+		setrect(bound, l, t, r, b);
+		SetTextRect(bound);
+		ShowText;
+	end;
+{*************************************}
+
+	procedure Wait;
+	begin
+		while (not Button) do
+			begin
+			end
+	end;
+{*************************************}
+
+{*************************************}
+end.				{IFaceUtil}

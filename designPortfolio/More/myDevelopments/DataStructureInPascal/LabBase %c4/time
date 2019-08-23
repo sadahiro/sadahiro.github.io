@@ -1,0 +1,61 @@
+unit time;
+{Programmer:	Makoto Sadahiro }
+{starting date: Nov 9th '93}
+{last modified date:  Nov 28th '93}
+
+{utilities for converting time}
+
+interface
+	type
+		montype = (jan, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec);
+		daytype = 1..31;
+		hourtype = 0..23;
+		minutetype = 0..59;
+		timeType = record
+				month: monType;
+				day: daytype;
+				hour: hourtype;
+				minute: minutetype;
+			end;
+
+{convert Hours to Minutes}
+	function ConvertToMin (var number: integer): integer;
+	{in, out:  number from procedure call}
+	{pre:integer is in Hours}
+	{post: integer is in Minutes}
+{convert Minutes to Hours}
+	function ConvertToHr (var number: integer): integer;
+	{in, out:  number from procedure call}
+	{pre:integer is in Minutes}
+	{post: integer is in Hours}
+{get the minutes of difference inbetween two different minutes}
+	function TimeDifference (var timeIn, timeOut: integer): integer;
+	{in, out:  number from procedure call in minutes}
+	{pre:integer is in Minutes}
+{****************************************************************}
+
+implementation
+
+	function ConvertToMin (var number: integer): integer;
+	begin
+		ConvertToMin := (number div 100 * 60) + (number mod 100);
+	end;				{convertToMin}
+{*****************************}
+
+	function ConvertToHr (var number: integer): integer;
+	begin
+		ConvertToHr := (number div 60 * 100) + (number mod 60);
+	end;				{convertToHr}
+{*****************************}
+
+	function TimeDifference (var timeIn, timeOut: integer): integer;
+	begin
+		if timeOut < timeIn then
+			timeOut := timeOut + 1440;
+		TimeDifference := timeOut - timeIn;
+	end;				{TimeDifference}
+{*****************************}
+{*****************************}
+
+{*************************************}
+end.				{time}

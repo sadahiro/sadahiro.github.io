@@ -1,0 +1,58 @@
+unit directionGenerator;{generate randon numbers for direction purpose}
+
+interface
+	function pentaDirection: integer;
+	{generate random number for 8directions}
+
+	function quadDirection: integer;
+	{generate random number for 4directions}
+
+	function doubleDirection: integer;
+	{generate random number for 2directions}
+{****************************************************************}
+implementation
+
+	function pentaDirection: integer;
+		const
+			include_seconds = true;
+		var
+			randomN: integer;
+			dateTime: longint;
+
+	begin
+		GetDateTime(dateTime);
+		randSeed := dateTime;
+		randomN := random;
+		randomN := abs(randomN mod 8) + 1;
+		pentaDirection := randomN
+	end;
+{*****************************}
+
+	function quadDirection: integer;
+		var
+			randomN: integer;
+			dateTime: longint;
+
+	begin
+		GetDateTime(dateTime);
+		randSeed := dateTime;
+		randomN := random;
+		randomN := abs(randomN mod 4) + 1;
+		quadDirection := randomN
+	end;
+{*****************************}
+
+	function doubleDirection: integer;
+		var
+			randomN: integer;
+			dateTime: longint;
+
+	begin
+		GetDateTime(dateTime);
+		randSeed := dateTime;
+		randomN := random;
+		randomN := abs(randomN mod 2) + 1;
+		doubleDirection := randomN
+	end;
+{*************************************}
+end.	{end of unit}

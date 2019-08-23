@@ -1,0 +1,47 @@
+unit message;
+{Programmer:	Makoto Sadahiro }
+{starting date: Dec 11th '93}
+{last modified date:  Dec 11th '93}
+
+{this unit is series of screens for interface}
+
+interface
+{showing the screen of start up}
+	procedure StartUpMessage;
+{shows list of command when needed}
+	procedure ComList;
+{*****************************}
+
+implementation
+
+	procedure StartUpMessage;
+	begin
+		writeln('Database Oak Tree');
+		writeln('	ver 1.0');
+		writeln('Makoto Sadahiro');
+		writeln('	December 11th 1993');
+		writeln;
+		writeln(' ?- for command list');
+		writeln;
+	end;		{StartUpMessage}
+{*****************************}
+
+	procedure ComList;
+	begin
+		writeln('File commands');
+		writeln('	L. Load in Data from Source File');
+		writeln('	S. Save Modified Data');
+		writeln('	Q. Quit');
+		writeln('Edit commands');
+		writeln('	A. Add Name');
+		writeln('	D. Delete Name');
+		writeln('Search commands');
+		writeln('	F. Find Particular Name');
+		writeln('	P. Print All Names');
+		writeln('All commands are CaseSensitive.  use ONLY UPPER case.');
+		writeln;
+	end;		{ComList}
+{*****************************}
+
+{*****************************}
+end.		{Screens}

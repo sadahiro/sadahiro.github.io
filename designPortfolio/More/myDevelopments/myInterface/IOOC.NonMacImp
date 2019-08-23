@@ -1,0 +1,72 @@
+unit InOut;
+
+interface
+	uses
+		IOre;
+
+	procedure WhatXten (var Xname: str255);
+	procedure WhatDrive (var Dnum: char);
+	procedure GetInput (var Uname, Fread, Fwrite: str255; CaNum: integer);
+	procedure PrintIt (var UserName, FileRead, FileWritten: str255; NWLine, NELine: integer; LngstWrd: str255; AndNum: integer);
+
+implementation
+
+{* * * * * * * * INPUT* * * * * * * *}
+	procedure WhatXten (var Xname: str255);
+	begin
+		writeln('what is the name of extention', 'example:  pas, exe, dat, txt etc..');
+		readln(Xname)
+	end;
+
+	procedure WhatDrive (var Dnum: char);
+	begin
+		writeln('In what drive', 'example:  a for Fdrive, c for Hdrive');
+		readln(Dnum)
+	end;
+
+	procedure GetInput (var Uname, Fread, Fwrite: str255; CaNum: integer);
+		var
+			Xname: str255;
+			Dnum: char;
+
+	begin
+		if CaNum = 1 then
+			begin
+				writeln('type in your name');
+				readln(Uname)
+			end;
+		if CaNum = 2 then
+			writeln('the imput seems invaled. I will ask you again');
+		writeln('What is name of input file');
+		readln(Fread);
+		WhatXten(Xname);
+		WhatDrive(Dnum);
+		Fread := concat(Dnum, ':', Fread, '.', Xname);
+		if CaNum = 1 then
+			begin
+				writeln('What is name of output file');
+				readln(Fwrite);
+				WhatXten(Xname);
+				WhatDrive(Dnum);
+				Fwrite := concat(Dnum, ':', Fwrite, '.', Xname)
+			end
+	end;
+
+{* * * * * * * * OUTPUT * * * * * * * *}
+	procedure PrintIt (var UserName, FileRead, FileWritten: str255; NWLine, NELine: integer; LngstWrd: str255; AndNum: integer);
+
+		var
+			sure: boolean;
+	begin
+		writeln('My name is :', UserName);
+		writeln('File read from is :', FileRead);
+		writeln('File written to is :', FileWritten);
+		writeln;
+		OpenFileIn(FileWritten, sure);
+		if sure = false then
+			writeln('	ERROR--some kind of error, I cant find the file to output');
+{PRINTOUT THINGS ON PAPER HERE}
+
+		writeln('The longest word is -', LngstWrd, '-   with the count of :', AndNum);
+		CloseFile(FileWritten)
+	end;

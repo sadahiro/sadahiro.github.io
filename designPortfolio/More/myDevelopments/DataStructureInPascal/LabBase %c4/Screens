@@ -1,0 +1,45 @@
+unit Screens;
+{Programmer:	Makoto Sadahiro }
+{starting date: Nov 28th '93}
+{last modified date:  Nov 28th '93}
+
+{this unit is series of screens for interface}
+
+interface
+{showing the screen of start up}
+	procedure StartUpScreen;
+{showing help screen of base dir}
+	procedure BaseHelpScreen;
+{*****************************}
+
+implementation
+
+	procedure StartUpScreen;
+	begin
+		writeln('Lab log- Database');
+		writeln('	ver 1.0');
+		writeln('Makoto Sadahiro');
+		writeln('	November 22nd 1993');
+		writeln;
+		writeln('type ''?'' for help');
+	end;		{menu}
+{*****************************}
+
+	procedure BaseHelpScreen;
+	begin
+		writeln;
+		writeln('entering help screen');
+		writeln;
+		writeln('the prompt usually shows you where you are.');
+		writeln('	for example - ( BaseLab .. .. you are in BaseLab directory ) ');
+		writeln('you will be chosing command by typing in one charactor');
+		writeln('			where you can see only one Upper case charactor of each choice');
+		writeln('						for example-(R for weeklyReset.....)');
+		writeln('the command is CaseSensitive.  you can use only UPPER CASE.');
+		writeln('');
+		writeln('');
+	end;		{BaseHelpScreen}
+{*****************************}
+
+{*****************************}
+end.		{Screens}

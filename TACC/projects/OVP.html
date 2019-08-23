@@ -1,0 +1,224 @@
+<HTML>
+  <HEAD>
+    <TITLE>Open Video Project</TITLE>
+  </HEAD>
+  
+  <BODY TEXT="#ffffff" LINK="#ccbbcc" VLINK="#88aacc" BGCOLOR="black">
+    
+    <br>
+    
+    <H2>
+      &nbsp;&nbsp;&nbsp;
+      <font color=#ff4444>O</font>pen
+      <font color=#ff4444>V</font>ideo
+      <font color=#ff4444>P</font>roject
+      <font color=#aaaaff>Toolkit</font>
+      &nbsp;(
+      <font color=#ff4444>OVP</font>
+      <font color=#aaaaff>Tk</font>
+      )
+    </H2>
+    
+    &nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;
+    PI: Gary Geisler, UT Austin School of Information<br>
+
+    <H4>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <font color=#ffffdd>
+	Requirement for digital media archive:
+      </font>
+    </H4>
+    
+    <UL>
+      <font color="#cccccc">
+	&nbsp;&nbsp;&nbsp;&nbsp;
+	Due to advancement and accessibility of digital media technology, we are beginning to accumulate large collection of digital media.  There is greater needs for facilities to collect, manage, and publish those media.  This is especially true to organizations that holds large amount of digital contents.  Open Video Project particularly focuses on this issue with videos, for archiving, managing with relevant meta-data, and retrieving with visual clues.<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;
+	Creating right meta-data and user interface is important for effective discovery process.  OVP was especially intended to be used in educational/research institute, museum, and etc, that discovery and understanding of context matters instead of watching video for entertainment purpose.  Tools currently available for this purpose are prohibitively expensive or not opted for creating their own server to have better control in contents and user interface(UI).  Having own local server allows more controlled database of our won domain of dataset.<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;
+	Open Video Project(OVP) enables organizations on-line video archive, management, and retrieval without significant technical or financial resource.  As the distribution is open source, it also allows technical savvy organizations to create more adapted video archive server.<br>
+	<br>
+	
+	Further reference:<br>
+	<br>
+	<font color=#cccccc>
+	  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	  <A HREF="http://www.open-video.org">
+	    Open Video Project</A><br>
+	  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	  <A HREF="http://www.open-video-toolkit.org">
+	    Open Video Toolkit</A><br>
+	</font>
+	<br>
+      </font>
+    </UL>
+    
+    <H4>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <font color=#ffffdd>
+	OVP Video Parser (ovsurgen):
+      </font>
+    </H4>
+    
+    <UL>
+      &nbsp;&nbsp;&nbsp;&nbsp;
+      OVP is mainly composed of UI, database, web server components, and video parser.  My involvement to OVP is to create parser for the suite to create needed visual components from source video files.  Users submit source video files along meta-data.  The parser creates different types of still images and videos based on scene change detected with flexible user option to be used in visual retrieval process with UI.  Currently, there is no straight tools that performs required tasks, so we have built a tool based on the same API as commonly and widely used tools, like mplayer(mencoder), ffmpegX.  This allows flexibility of accepting wide variety of input file and to be upto date with current bleeding edge video codecs.<br>
+      <br>
+	<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;
+      Common tasks of parser are to create key frame images, fast scan videos, excerpt video, and  animated images for UI, all based on scene change.<br>
+      <br>
+      <br>
+      
+      <font color=#cccccc>
+	Key frames:<br>
+      </font>
+      <ul>
+	jpegs are generated with user defined maximum scene change count and resizing.  This is mainly used as thumbnails of each scenes in UI, thus default is jpeg files.<br>
+      </ul>
+      <br>
+      
+      <font color=#cccccc>
+	fast scan video:<br>
+      </font>
+      <ul>
+	is generated with user defined speed, video format, and resizing.  This is mainly used as fast preview of entire video footage, thus default is flv file.<br>
+      </ul>
+      <br>
+      
+      <font color=#cccccc>
+	excerpt video:<br>
+      </font>
+      <ul>
+	is generated with N-seconds of excerpt from the original footage for partial preview.<br>
+	</ul>
+      <br>
+      
+      <font color=#cccccc>
+	animated images:<br>
+      </font>
+      <ul>
+	are generated to create motion thumbnails of each scenes in UI.<br>
+      </ul>
+      <br>
+      
+      <font color=#cccccc>
+	scene change detection:<br>
+      </font>
+      <ul>
+	is currently based on histogram.  More sophisticated methods may be needed in future based on context if especially the context is more of educational in nature.<br>
+      </ul>
+      <br>
+      
+      <br>
+      
+
+      <H4>
+	ovsurgen --help
+      </H4>
+      <pre>
+
+README for ovsurgen
+date: June 12th 2009
+version: 0.2
+
+./make will completely rebuild ovsurgen
+OVP_Toolkit (this dir), ffmpeg, and gd-* should be in the same dir as
+ovsurgen has dependency to ffmpeg and gd
+
+
+ovsurgen is a CLI tool to parse video files for analyzing/reviewing.
+This CLI tool was reated to work as back end engine for
+OpenVideoProject video server.  See follwing URL for further info:
+
+     http://www.open-video.org/
+
+
+ovsurgen expects valid single stream source movie file.  Streams after
+the first stream will be ignored.  It should accept variety of
+format/codec, but not guaranteed.  mpeg and quicktime (.mov) are known
+to work.
+
+
+ovsurgen expects you have following structure in the same directory as
+your source data file
+
+./excerpt	    for flv movie
+./fastforward	    for fast forward movie
+./keyframes/full
+./keyframes/large
+./keyframes/medium
+./keyframes/small
+./keyframes/thumb
+./slideshow	    for gif animation
+
+
+ovsurgen --help will show invocation options as following
+
+/*
+Usage: ovsurgen [options] -if in-file [options]
+
+options:
+
+    -help|--help      displays this help
+    -verbose
+    -if filename      input filename (*required)
+    -of filename_stem output filename
+                       default is input filename
+    -interval         fast forward frame interval count
+                       default is 64
+    -format           output format (default: mpeg)
+    -scene            maximum count for scene change detection
+
+  scale factors are mutually exclsive.  Only the last specified
+  Later scale factor in user  argument has higer precidence.
+
+    -scale_ratio      output scale 0.01-1.00
+    -scale_x          output x-dimension by pixel count
+    -scale_y          output y-dimension by pixel count
+
+*/
+
+An example of invocation will be:
+
+  ovsurgen -if inputfile.mpg -interval 64 -format flv -scene 24 -scale_ratio 1.0
+
+where above options for interval, format, scene, and scale are default if you do
+not invoke the tool with those options.  -if (input file name) is required.
+
+
+./clean will clean all output files only from ovsurgen to above
+directories leaving directory structure intact.
+
+// end of README for ovsurgen
+
+      </pre>
+      
+      <br>
+      <br>
+    </UL>
+    
+    <center>
+      <hr width=512>
+      <br>
+      makoto@tacc.utexas.edu<br>
+      ACES 2.340<br>
+      (512)475-6954<br>
+      <br>
+      <A HREF="http://www.tacc.utexas.edu">
+	TEXAS Advanced Computing Center</A><br>
+      <A HREF="http://www.tacc.utexas.edu/resources/visualization/">
+	Visualization and Data Analysis Group</a><br>
+      <br>
+      <hr width=512>
+      <br>
+      updated: June 19th 2009<br>
+      <br>
+    </center>
+    
+
+  </BODY>
+</HTML>

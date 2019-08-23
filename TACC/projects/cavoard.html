@@ -1,0 +1,220 @@
+<HTML>
+<HEAD>
+<TITLE>Floating keyboard for CAVE Environment</TITLE>
+</HEAD>
+
+<BODY TEXT="#ffffff" LINK="#ccbbcc" VLINK="#88aacc" BGCOLOR="black">
+
+<H2>
+&nbsp;&nbsp;&nbsp;
+<font color=#aaaaff>Floating</font>
+keyboard for
+<font color=#ff4444>CAVE</font>
+<font color=white>
+Environment</font>
+</H2>
+
+<H4>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<font color=#ffffcc>
+Adding floating keyboard with CAVElib for alphanumeric input
+</font>
+</H4>
+
+<UL>
+<font color="#cccccc">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+This page covers only specific topic, floating keyboard for CAVElib development.  This is not a users guide for immersive environment at ACES visualization Lab.  For immersive environment users guide, please follow:<br>
+<br>
+<font color=#cccccc>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<A HREF="http://www.tacc.utexas.edu/~makoto/immersive_environment/index.html">
+Users guide to immersive environment at ACES Visualization Lab</A><br>
+<br>
+</font>
+</font>
+</UL>
+
+<H4>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<font color=#ffffdd>
+Are data input methods needed in immersive spaces?
+</font>
+</H4>
+<UL>
+&nbsp;&nbsp;&nbsp;&nbsp;
+A strength of immersive environment is ability to explore data by its nature due to the gained degrees of freedom. For this reason, most of useful immersive environment applications are viewers of some sort.  Users input are mostly limited to only navigation so that data input, such as keyboard input, is often not required.  So far, this is been mostly true due to type of data or type of visualization that were often brought into immersive space.  While it is true that a good data input method is not needed, it is probably also true that visualization that needs intensive data input is not attempted in immersive space due to a lack of good data input method.<br>
+<br>
+One reason why we can not come up with a good alphanumeric input method is due to lack of our ability to connect our space to virtual space PRECISELY.  Of course.  It is because we can not see the depth of the space well enough unless the depth of geometry is EXACTLY on the screen.  If you are interested in knowling what I mean by this, please read
+"
+<A HREF="./PDA.html#naturally_incomplete">
+Immersive environment is naturally incomplete
+</A>"
+section of
+"<A HREF="./PDA.html">
+Adding interface to I mmersive Environment with PDA host
+</A>"
+, a parallel project to this CAVE keyboard project.<br>
+<br>
+The purpose of this project is to experiment with different ways of input, and to find out fast and effective alphanumeric input methods while resulting code is organized and offered as "CAVoard", API for CAVElib keyboard input method.<br>
+<br>
+
+<H4>
+a floating keyboard
+</H4>
+&nbsp;&nbsp;&nbsp;&nbsp;
+Maybe it did not have to look like a keyboard, but what is tried first is of course simple copy of real keyboard.  This is what we are used to seeing, we know where desired keys are.  It works in the same way as a keyboard.  The keyboard is placed in front of you as it is activated with current wand position.  Each charactor can be struck by wand to be keyed into a string buffer.  To avoid performance penalty, I have avoided to make it look fancy for the first attempt.  Later version should support fancier keys on a separate thoread.  The keyboard allows programmers to decide which keys are allowed.  This is because certain charactors are illegal as a file name and so on.  The keyboard works as non-blocking function so it will not pause the CAVE environment while user input is being keyed.  It will only update state of string buffer, and programmers have freedom to fetch them at their will.  Supported methods for the first version is as follows.  This no way mature enough.  It will be improved.<br>
+<br>
+<font color=#aaccff>
+Current feature
+</font>
+includes:<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+- Full keyboard with choice of setting allowed keys<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+- Place keyboard in desired location with desired size and spacing of keys<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+- Activate/disactivate with or without current position remembered<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+- Initialize, edit and fetch string buffer as string or char*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+You will decide when to fetch by peeping current last charactor<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+For example, you can retrieve the buffer as you see "return" charactor<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+- Display current string buffer right next to wand or right below keyboard<br>
+
+<pre>
+
+cavoard class public methods:
+
+  cavoard();
+  ~cavoard();
+  // does not do anything since CAVE will void any operation here
+
+  void init_cavoard(float, float);
+  // specifies scale of keyboard and spacing between keys
+  //  and initializing members etc
+  // this should be called from update call back function of your code
+  
+  void set_keys(char*, char*);
+  // set allowed keys by overriding default full keyset
+  // specify them as string as "lower_case_set" and "upper_case_set"
+  
+  void unset_keys();
+  // unset allowed keys and reset to default keyset
+  
+  void draw_wand();
+  // will draw a sphere in extended wand position
+  // (z-displacement)
+
+  void draw_keyboard();
+  // will draw virtual keyboard with string buffer
+  // this should be called from display call back function of your code
+
+  int update_keyboard();
+  // updating display/physics of keyboard
+  // This is the main function of this class.
+  // You should always call this from your update call back function.
+  // Each time called, it will check on key press, and returns as int.
+  // It is upto you when you will retrieve buffer by get_buffer functions.
+  
+  bool is_active();
+  // returns keyboard activation state
+
+  void activate();
+  // enables keyboard
+  // initializes keyboard coordinate to current extended wand position
+  
+  void activate(float, float, float);
+  // enables keyboard
+  // initializes keyboard coordinate with given coordinate
+  
+  string* disactivate();
+  // disables keyboard: ignoring precondition
+  
+  void toggle_activation();
+  // toggles keyboard activation
+  // keeps keyboard coordinate that was set previously by activate()
+
+  void make_upper();
+  void make_lower();
+  // set shift up/down
+
+  void init_buffer();
+  // initialize keyboard buffer with length INT_MAX
+
+  void init_buffer(int);
+  // initialize keyboard buffer with int
+
+  void set_buffer_display_mode(CV_FBD_TYPE_see_below);
+  // sets real time display for return buffer
+  // CV_FBD_DISABLED       buffer display is disabled
+  // CV_FBD_WAND_to_RHS    displayed on wand position, increment to right
+  // CV_FBD_WAND_to_LHS    displayed on wand position, increment to left
+  // CV_FBD_KBD_to_RHS     displayed below keyboard, increment to right
+  // CV_FBD_KBD_to_LHS     displayed below keyboard, increment to left
+  
+  string* get_buffer();
+  // retreives keyboard buffer as string
+
+  string* get_buffer(string*);
+  // retreives keyboard buffer as string and also updates original string
+
+</pre>
+
+Documentation for is not done yet.  It will be posted as soon as it is done.<br>
+<br>
+<br>
+<IMG SRC="./jo2.jpeg" WIDTH=640 HEIGHT=480>
+<IMG SRC="./jo3.jpeg" WIDTH=640 HEIGHT=480>
+<br>
+<UL>
+<center>
+( Trying out CAVoard.  Note keyboard looks on a plane while screen is curved. )<br>
+</center>
+</UL>
+<br>
+To be honest, I found operation of CAVoard still tiring.  Boy, I still have a lot of work to be done....<br>
+<br>
+
+<H4>
+future plan for input methods
+</H4>
+&nbsp;&nbsp;&nbsp;&nbsp;
+It is secret till I actually finish implementing them.  No surprise(smile).  This project has just started.  I will be adding more items in above section as soon as I am done with each idea items.<br>
+<br>
+
+<H4>
+End note, and more visualization nodes...
+</H4>
+&nbsp;&nbsp;&nbsp;&nbsp;
+As mentioned earlier, using PDA in immersive environment for hosting more buttons/potentiometer, allowing alphanumeric input, and enabling haptic device is one another project.  Please refer to <A HREF="http://www.tacc.utexas.edu/~makoto/projects/PDA.html">Adding interface to I mmersive Environment with PDA host</A> for the more information.<br>
+<br>
+
+<br>
+
+</UL>
+
+<center>
+<hr width=512>
+<br>
+makoto@tacc.utexas.edu<br>
+ACES 2.340<br>
+(512)475-6954<br>
+<br>
+<A HREF="http://www.tacc.utexas.edu">
+TEXAS Advanced Computing Center</A><br>
+<A HREF="http://www.tacc.utexas.edu/resources/vislab">
+Visualization and Data Analysis Group</a><br>
+<br>
+<hr width=512>
+<br>
+updated: March 11th 2006<br>
+<br>
+</center>
+
+
+</BODY>
+</HTML>

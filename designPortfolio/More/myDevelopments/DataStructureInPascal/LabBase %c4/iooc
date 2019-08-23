@@ -1,0 +1,62 @@
+unit IOOC; 	{InOutOpenClose}
+{Programmer:	Makoto Sadahiro }
+{starting date: apr 19th '93}
+{last modified date:  oct 16th '93}
+
+{unit IOOC is unit to handle opening existing file, opening new file and closing file }
+interface
+{procedure OpenFileIN will open pre-existing file and pass the text file contents and the name of file}
+{existance of file is not necesary because only existing file will show up on dialog box}
+	procedure OpenFileIN (var FileIN: text;
+									var FnameIN: str255);
+{in:  none. just click of mouse on dialog box}
+{out:  text file "FileIN" and file name "FnameIN"}
+{pre: FileIN, FnameIN is empty-not necesary}
+{post:  FileIN, FnameIN has new data}
+
+{procedure OpenFileOUT will create new file to be saved to}
+	procedure OpenFileOUT (var FileOUT: text;
+									var FnameOUT: str255);
+{in:  none. just click of mouse on dialog box, and type in new file name}
+{out:  text file "FileOUT" and file name "FnameOUT"}
+{pre: empty}
+{post: text file "FileOUT"  has empty data}
+
+{procedure CloseFile will close text file}
+	procedure CloseFile (var FileToClose: text);
+{in: text}
+{post: text file closed}
+{****************************************************************}
+
+implementation
+	procedure OpenFileIN (var FileIN: text;
+									var FnameIN: str255);
+		var
+			Message: str255;
+	begin
+		Message := 'dammy';		{message is just dammy to call requester window}
+		FnameIN := OldFileName(Message);
+		reset(FileIN, FnameIN);
+	end;				{end OpenFileIn}
+{*****************************}
+
+	procedure OpenFileOUT (var FileOUT: text;
+									var FnameOUT: str255);
+		var
+			Message: str255;
+	begin
+		Message := 'type in new file name';		{messave will show up on requester window}
+		FnameOUT := NewFileName(Message);
+		rewrite(FileOUT, FnameOUT)
+	end;				{end OpenFileOut}
+{*****************************}
+
+	procedure CloseFile (var FileToClose: text);
+	begin
+		close(FileToClose)
+	end;				{end CloseFile}
+{*****************************}
+
+
+{*************************************}
+end.				{end of unit IOpirots}

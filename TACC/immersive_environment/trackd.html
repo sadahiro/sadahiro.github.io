@@ -1,0 +1,146 @@
+<HTML>
+<HEAD>
+<TITLE>using CAVElib trackd daemon in ACES VisLab</TITLE>
+</HEAD>
+
+<BODY TEXT="#ffffff" LINK="#ccbbcc" VLINK="#88aacc" BGCOLOR="black">
+
+<font color=#ffffcc>
+<H4>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+README for using CAVElib trackd daemon in ACES VisLab
+</H4>
+</font>
+
+<UL>
+<font color="#cccccc">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+File: milagros.tacc.utexas.edu:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/lusr/CAVE/trackd/doc/milagros_tacc_utexas_edu_README.txt<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Contact: Makoto Sadahiro makoto@tacc.utexas.edu<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Date written: January 23, 2004<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Date updated: March 11, 2006<br>
+<br>
+</UL>
+
+<UL>
+<H4>Intro:</H4>
+&nbsp;&nbsp;&nbsp;&nbsp;
+The trackd, as a part of VRCO's CAVElib, is designed to run as a daemon to feed input signal to a CAVElib applications that runs in an immersive environment.  In general, trackd is used to feed 3-D coordinates/rotations of tracking sensors in the visualization space into CAVElib.  As of December 2003, the trackd in ACES VisLab is set up to be used with 3rdTech's hiBall head tracking system as default.  Our trackd is set up in the way it will sample coordinate/rotations signal from hiBall through hiBall_client, which also runs on the same host as trackd, via UNIX named-pipe.  It is still user-configurable to take input from several other input devices.  You may also write your own daemon to feed signal into the trackd if you wish.<br>
+<br>
+
+<H4>The trackd environment installation:</H4>
+&nbsp;&nbsp;&nbsp;&nbsp;
+There is a script to set up visualization environment.  The scrip will setup your account for hiBall, CAVElib and vGeo.  Running this script will be the easiest way to set up your user account for immersive environment.  Issue the following command.<br>
+<br>
+> /lusr/immersive_env/bin/create_immersive_env.milagros_tacc_utexas_edu.csh<br>
+<br>
+This script assumes you are using csh/tcsh.  If you are using another type of shell, please talk to us.  The script will create few files in your home directory.  The script will also add a line<br>
+<br>
+source ${HOME}/.milagros_env<br>
+<br>
+at the end of .cshrc in your home directory.  This is your original sourcing point to all of environment that you will need for the immersive environment on "milagros.tacc.utexas.edu".  Now, environment installation is done.  Issue a command<br>
+<br>
+> source ~/.cshrc<br>
+<br>
+to let new setup to take effect, or you may re-login.  Now your account is setup to run trackd daemon.  The environment file,<br>
+<br>
+${HOME}/.user.milagros.tacc.utexas.edu.trackd_env<br>
+<br>
+is where you will add your own environment values.  There is a section that tells to add your own environment.  The first line is<br>
+<br>
+source /lusr/HiBall/env/milagros.tacc.utexas.edu.trackd_env<br>
+<br>
+Do not comment this out.  Your own environment is to be added after this line.  There is a section in the file to instruct you to add your environments.  You may want to take a look at these files to see what kind of environment value is used so you can override what you need in your own environment file for trackd.  If you are confused, look into the account of username, “testenv”, to see how source and setenv is done.  This account is normally setup for minimal immersive environment.<br>
+<br>
+
+<H4>Running trackd daemon:</H4>
+&nbsp;&nbsp;&nbsp;&nbsp;
+If installation of environment above is done correctly, you should now see a path to<br>
+<br>
+/lusr/CAVE/trackd/bin<br>
+<br>
+If you issue a command as<br>
+<br>
+> trackd<br>
+<br>
+, you are invoking in default mode which location of the unix named-pipe is set to ${HOME}/.tracker.pipe , where this is also a default location to a trackd input daemon, hiBall_client, for using hiBall head tracker.  If you are running one copy of CAVElib based application with hiBall head tracker, this is all you need to do.  If you are, for some reason, running more than one copy of trackd or you need to use another pipe location, you will need to define new location to environment valuable TRACKD_PIPE so it will not collide with other trackd daemon pipes.  You may do so by issuing next line in new shell.<br>
+<br>
+> setenv TRACKD_PIPE new_location<br>
+<br>
+Please do not specify new_location above outside of your account.  trackd will do its best to clean up after itself, but it is not guaranteed it will always delete pipe file when it is terminated.  In addition to specifying new pipe, if you are not taking input from 2nd entity of hiBall_client, you will also need to write your own trackd config file to specify type of input to trackd daemon.  This will be covered in later section.  Running more than 1 trackd is a relatively confusing process.  Please come talk to us if you are really interested in it.  If you are writing script to automate trackd invocation, we recommend to explicitly specifying config file name.  With newer versions, options should be basically only added, but it is possible we have to change default for whatever reasons, for example.  Trackd does not have much of options, but one option you need to know is -file option.  If you have own trackd configuration file, you can invoke trackd as follows.<br>
+<br>
+> trackd -file /somedir/filename.conf<br>
+<br>
+Default config file is in the following location if you are interested in it.<br>
+<br>
+/lusr/CAVE/trackd/etc/trackd.conf<br>
+<br>
+If you are running more than 1 copy of trackd, this means you are running more than 1 copy of CAVElib applications.  This means you also need to write more than 1 caverc files.  Topics about caverc file are covered in CAVElib documents.  As written above, running more than 1 trackd is fairly confusing.  Please come see us if you really want to do this.<br>
+<br>
+You may terminate trackd by issuing ctrl-C.  Since it will attempt to clean the pipe, you should expect broken-pipe with corresponding daemon.<br>
+<br>
+
+<H4>About trackd.conf:</H4>
+&nbsp;&nbsp;&nbsp;&nbsp;
+With "-file" option, you can tell trackd to use your own config file.  This is example of some components, how it is defined.  Ignore the line numbers on the left of each line.<br>
+<pre>
+1.  DefineDevice DT hiball_tracker 2
+2.  DeviceOption DT valuatorscale 0 10 all
+3.  DeviceOption DT valuatorscale 1 10 all
+4.
+5.  DefineConnector SHM1 shm out 2
+6.  ConnectorOption SHM1 data tracker
+7.  ConnectorOption SHM1 key 4126
+8.  ConnectorOption SHM1 numValuators 1 6
+9.  ConnectorOption SHM1 numValuators 2 6
+</pre>
+The line 1, "DefineDevice" defines device named DT which has 2 devices.  In this case, it defines hiBall tracker which has head sensor and wand sensor, thus 2 devices, numbered 0 and 1.  "hiball_tracker" defines the name of shared object.  DT will use /lusr/CAVE/trackd/bin/hiball_tracker.so object as a plug-in for trackd.<br>
+<br>
+The line 2, "DeviceOption" defines "all" values of 0th device of device "DT" should be multiplied by 10.  Thus, if you have an input, (coord[11,45,62], rot[0,358,21]), then result will be coord[110,450,620], rot[0,3580,210], where rot signal will be mod by 360 degrees.<br>
+<br>
+The line 5, "DefineConnector" defines a shared memory(shm) named "SHM1" for 2 of "out"put elements.<br>
+<br>
+The line 6, "ConnectorOption" defines the type of "data" for shared memory "SHM1" is "tracker" data.<br>
+<br>
+The line 7, "ConnectorOption" defines the "key" for shared memory "SHM1" is 4126.<br>
+<br>
+The line 9, "ConnectorOption" defines trackd will write 6 valuators for 2nd tracker device into shared memory "SHM1".  Note, it is 2nd device, not 1st device.  It is because hiBall counts devices from 0, but CAVElib counts devices from 1.<br>
+<br>
+
+<H4>More documents:</H4>
+&nbsp;&nbsp;&nbsp;&nbsp;
+This document is meant to be an introduction.  There is a whole set of trackd related documents from VRCO.  Please refer to documents at<br>
+<br>
+/lusr/CAVE/trackd/doc<br>
+<br>
+
+</UL>
+</font>
+
+<center>
+<hr width=512>
+<br>
+makoto@tacc.utexas.edu<br>
+ACES 2.340<br>
+(512)475-6954<br>
+<br>
+<A HREF="http://www.tacc.utexas.edu">
+TEXAS Advanced Computing Center</A><br>
+<A HREF="http://www.tacc.utexas.edu/resources/vislab">
+Visualization and Data Analysis Group</a><br>
+<br>
+<hr width=512>
+<br>
+updated: March 11th 2006<br>
+<br>
+</center>
+<br>
+
+</BODY>
+</HTML>

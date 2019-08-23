@@ -1,0 +1,165 @@
+<HTML>
+<HEAD>
+<TITLE>Immersive Environment</TITLE>
+</HEAD>
+
+<BODY TEXT="#ffffff" LINK="#ccbbcc" VLINK="#88aacc" BGCOLOR="black">
+
+<font color=#ffffcc>
+<H4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+README for using the immersive environment at ACES VisLab</H4>
+
+</font>
+
+<font color="#cccccc">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+File: milagros.tacc.utexas.edu:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/lusr/immersive_env/doc/milagros_tacc_utexas_edu_README.txt<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Contact: Makoto Sadahiro makoto@tacc.utexas.edu<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Date: January 23, 2004<br>
+
+<UL>
+<font color=white>
+The immersive environment for ACES VisLab
+</font>
+</UL>
+
+<UL>
+Intro:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+The ACES VisLab offers an immersive environment to the users.  It is equipped with nearly 360 degree surrounding display driven by 13 projectors, mono/stereo view, surrounding sound, flight stick/throttle and motion tracking.  We have certain default setup that users can jump into the system and start using the system.  There is some necessary learning for importing users’ own data, but consulting from TACC will be always provided.<br>
+<br>
+<br>
+
+Hardware:<br>
+&nbsp;&nbsp;
+Screen-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+The immersive environment at the ACES VisLab is equipped with a 180 degrees curved front screen and 2rows x 5columns flat panels that covers the other 180 degrees.  These screens are facing each other, so you will have screen space of 360 surrounding degrees.<br>
+<br>
+&nbsp;&nbsp;
+Stereo glass-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+The front projection system is capable of displaying in stereo.  We use crystallized glasses that syncs with infrared pulses, emitted from 3 emitters on top of front curved screen.<br>
+<br>
+&nbsp;&nbsp;
+Motion tracking-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+For motion tracking, we use 3rdTech?s hiBall system.  The hiBall is an optical tracking system, which is capable of very precise tracking.  Our current configuration for the system comes with 2 positional/rotational sensors, one for head tracking and the other for wand tracking.  The wand is currently set up for 3 buttons configuration.  We have plans for future expansion to input devices.  The hiBall system is capable of providing tracking signals to multiple requests simultaneously.  This will allow multiple applications that use tracking signal to be running in the same time.<br>
+<br>
+&nbsp;&nbsp;
+Tracker client-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+We currently use sgi as the tracking system client for most of our needs.  We provide client-side daemon, “hiBall_client”, for sgi that fetches the tracking signal.  It is very easy to write your own code that communicates with the daemon to receive the tracking signal.<br>
+<br>
+&nbsp;&nbsp;
+Application/library-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+The vGeo/CAVElib from VRCO is installed on sgi, “milagros.tacc.utexas.edu”, which is our main computer for scientific visualization.  The vGeo was originally developed for the visualization of oceanographic data, but can be used for quite various kinds of data.  The vGeo runs on top of CAVElib, which is a great library to develop users’ own immersive applications.<br>
+<br>
+<br>
+Common environment in the VisLab:
+&nbsp;&nbsp;&nbsp;&nbsp;
+The ACES VisLab is already well configured for the use of the vGeo for immersive environment.  In ACES VisLab, it is set up in the way vGeo will drive all screens in 360 degrees by using all 13 projectors via all 6 sgi graphics pipes.  The area of display is fully and easily configurable by each user via CAVElib configuration file.  Due to our current hardware set up, only front curved screen is set up to be capable in stereo-mode.  This requires the use of stereo glass that is available in VisLab.  Normally, unless it is run in a simulator mode, a head tracking device with wand is used for input device to drive vGeo.<br>
+<br>
+<br>
+Tracking Signal Flow:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+In VisLab as of January 2004, trackd-daemon, hiBall_client-daemon is used to fetch input signals from hiBall head tracking device.  The tracking signal flow is as follows.<br>
+
+<pre>
+
+                      *The hiBall System
+                       (Tracking Signal Server)
+Head Tracker, Wand
+   |           /
+   |-(tether) /-(tether)
+   |         /
+hiBall Interface Box
+   |
+   |-(parallel cable)
+   |
+hiBall server (Dell win2K)
+   |
+------------------------------------------
+   |
+   |                  *Network
+   |
+------------------------------------------
+   |                  *milagros.tacc.utexas.edu (sgi)
+hiBall_client          (Tracking Signal Client)
+   |
+   |-(named-pipe)
+   |
+trackd
+   |
+   |-(shared memory location)
+   |
+CAVElib
+   |
+vGeo
+</pre>
+
+&nbsp;&nbsp;&nbsp;&nbsp;
+It is technically possible to run multiple Tracking Signal Clients, the machine where your application will run.  Or you can run multiple copies of hiBall_client to server multiple applications on the same client machine.<br>
+<br>
+<br>
+The environment installation:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+There is a script to set up visualization environment.  The scrip will setup your account for hiBall, CAVElib and vGeo.  Running this script will be the easiest way to set up your user account for immersive environment.  Issue the following command.<br>
+<br>
+> /lusr/immersive_env/bin/create_immersive_env.milagros_tacc_utexas_edu.csh<br>
+<br>
+This script assumes you are using csh/tcsh.  If you are using another type of shell, please talk to us.  The script will create few files in your home directory.  The script will also add a line<br>
+<br>
+source ${HOME}/.milagros_env<br>
+<br>
+at the end of .cshrc in your home directory.  This is your original sourcing point to all of environment that you will need for the immersive environment on “milagros.tacc.utexas.edu”.  Now, environment installation is done.  Issue a command<br>
+<br>
+> source ~/.cshrc<br>
+<br>
+to let new setup to take effect, or you may re-login.  Now your account is setup.<br>
+<br>
+<br>
+About buttons on our wand:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+The switches/buttons on the tracker-wand are actually not connected to hiBall server.  It is directly connected to milagros.tacc.utexas.edu.  After launching CAVE application, switch keyboard/mouse of milagros console ("sgi1 1") from "ticam Lt 1" to "Edit B 5".  This will activate 3 buttons on the switch box of the wand.  Each buttons actually look like flip-switches.  You can push them away from you to push buttons(click), or pull towards you to lock(hold and drag) buttons.  It will release the lock when you push it away from you again.  From top to bottom, they are button 1, 2 and 3.  The only red push-button is the same as button 1.  It is arranged that way since 1st button is often used to only click, and 2nd/3rd buttons are often used to drag.  Normally we use the red button as 1st button for that reason.  Our current set up does not use the trigger on the grip of the wand.<br>
+<br>
+<br>
+This document is meant to be an introduction.  There is a whole set of vGeo related documents from VRCO.  Please refer to documents at<br>
+<br>
+/lusr/vGeo/doc<br>
+<br>
+Most importantly again:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+Read *.README in /lusr/CAVE/doc directory.  vGeo IS a CAVElib application.  I have omitted most of CAVElib related topics here, so PLEASE read README for CAVElib.<br>
+<br>
+
+</UL>
+</font>
+
+<center>
+<hr width=512>
+<br>
+makoto@tacc.utexas.edu<br>
+ACES 2.340<br>
+(512)475-6954<br>
+<br>
+<A HREF="http://www.tacc.utexas.edu">
+TEXAS Advanced Computing Center</A><br>
+<A HREF="http://www.tacc.utexas.edu/resources/vislab">
+Visualization and Data Analysis Group</a><br>
+<br>
+<hr width=512>
+<br>
+updated: March 11th 2006<br>
+<br>
+</center>
+<br>
+
+</BODY>
+</HTML>

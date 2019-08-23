@@ -1,0 +1,92 @@
+(*****************************************************)
+(*  ADT for QUEUE -- linked implementation           *)
+(*****************************************************)
+unit queueADT;
+interface
+	uses
+		QadtTypes;
+	type
+		QueuePtrType = ^QueueNodeTYpe;
+		QueueNodeType = record
+				info: QElementType;      {defined in unit first line of type here}
+				next: QueuePtrType
+			end;
+		QueueType = record
+				Front, Rear: QueuePtrType
+			end;
+
+	procedure CreateQueue (var Queue: QueueType);
+	function EmptyQueue (Queue: QueueType): boolean;
+	function FullQueue (Queue: QueueType): boolean;
+	procedure InQueue (var Queue: QueueType; item: QElementType);
+	procedure OutQueue (var Queue: QueueType; var item: QElementType);
+	procedure DestroyQueue (var Queue: QueueType);
+
+(*-------------------------------------------------------------*)
+implementation
+
+(**************************************************)
+	procedure CreateQueue (var Queue: QueueType);
+	begin
+		Queue.Front := nil;
+		Queue.Rear := nil
+	end;
+
+(**************************************************)
+	function EmptyQueue (Queue: QueueType): boolean;
+	begin
+		EmptyQueue := (Queue.Front = nil)
+	end;
+
+(**************************************************)
+	function FullQueue (Queue: QueueType): boolean;
+	begin
+		FullQueue := false
+	end;
+
+(**************************************************)
+	procedure InQueue (var Queue: QueueType; item: QElementType);
+		var
+			Ptr: QueuePtrType;
+	begin
+		new(Ptr);
+		Ptr^.info := item;
+		Ptr^.Next := nil;
+		if Queue.Rear = nil then
+			Queue.Front := Ptr
+		else
+			Queue.Rear^.Next := Ptr;
+		Queue.Rear := Ptr
+	end;
+
+(***********************************************************)
+	procedure OutQueue (var Queue: QueueType; var item: QElementType);
+		var
+			Tptr: QueuePtrType;
+	begin
+		Tptr := Queue.Front;
+		Item := Queue.Front^.Info;
+		Queue.Front := Queue.Front^.Next;
+		if Queue.Front = nil then
+			Queue.Rear := nil;
+		Dispose(Tptr)
+	end;
+
+(************************************************************)
+	procedure DestroyQueue (var Queue: QueueType);
+		var
+			Tptr: QueuePtrType;
+			i: integer;
+	begin
+		while Queue.Front <> nil do
+			begin
+				Tptr := Queue.Front;
+				Queue.Front := Queue.Front^.Next;
+				Dispose(Tptr);
+			end;
+		Queue.Rear := nil
+	end;
+
+(************************************************************)
+
+end.  (* unit qadt *)

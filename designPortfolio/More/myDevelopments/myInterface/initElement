@@ -1,0 +1,26 @@
+unit initElement;
+{Programmer:	Makoto Sadahiro }
+{starting date: Nov 2nd '93}
+{last modified date:  Nov 2nd '93}
+
+{unit initializing several kinds of element}
+
+interface
+	{initialize an integer to zero}
+	procedure initInteger (var number: integer);
+{in:  number from procedure call}
+{out:  number from procedure call}
+{post: integer is zero}
+{****************************************************************}
+
+implementation
+
+	procedure initInteger (var number: integer);
+	begin
+		number := 0
+	end;
+{*****************************}
+
+
+{*************************************}
+end.	{end of unit}

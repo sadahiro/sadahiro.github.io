@@ -1,0 +1,35 @@
+unit culculationsBASIC;
+{Programmer:	Makoto Sadahiro }
+{starting date: Nov 2nd '93}
+{last modified date:  Nov 2nd '93}
+
+{unit culculationBASIC is series of simple culcurations}
+interface
+	{add ONE to counter}
+	procedure addOne (var number: integer);
+{in:  number from procedure call}
+{out:  number from procedure call + one}
+
+	{add TWO to counter}
+	procedure addTwo (var number: integer);
+{in:  number from procedure call}
+{out:  number from procedure call + two}
+{****************************************************************}
+
+implementation
+
+	procedure addOne (var number: integer);
+	begin
+		number := number + 1
+	end;
+{*****************************}
+
+	procedure addCounterTwo (var number: integer);
+	begin
+		number := number + 2
+	end;
+{*****************************}
+
+
+{*************************************}
+end.	{end of unit}

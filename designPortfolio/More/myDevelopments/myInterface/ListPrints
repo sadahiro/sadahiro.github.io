@@ -1,0 +1,110 @@
+unit ListPrints;
+{Programmer:	Makoto Sadahiro }
+{starting date: Nov 9th '93}
+{last modified date:  Nov 10th '93}
+
+{unit is for particularly many kinds of special printouts}
+{which goes with unit listype,listADT}
+{the build order: listype->listADT->ListPrint->calling program}
+
+interface
+	uses
+		time, listype, listADT;				{type declaration there}
+
+	type
+{StyleType}
+		StyleType = (Wkly, whateveryouneedtype);
+				{declaration}
+{*****************************}
+
+{procedures here is series of printing procedure}
+{these are all used from the last procedure-PrintList}
+
+{Weekly List Printing}
+{especially implimanted for "lab"-cis211.lab6}
+	procedure WklyListPrint (List: ListType);
+{*****************************}
+
+{procedure calls all goes to here first, then call another specified}
+{printing procedures above}
+{the printing style will be evaluated in case statement}
+	procedure PrintList (List: ListType;
+									PrintStyle: StyleType);
+{pre:lsit exists}
+{post:no change but list printed out in the way of each style}
+{*****************************}
+
+implementation
+	procedure WklyListPrint (List: ListType);
+		var
+			Tptr: PointerType;
+			max, usd, rem: integer;
+	begin
+		writeln;				{making space from last action}
+		writeln(' weekly usage report..................');
+		if EmptyList(List) then
+			writeln('shouldnt be here.  list is empty')
+		else
+			begin
+				Tptr := List;
+				write(':student #' : 12);
+				write(':access status' : 16);
+				write(':max Hours' : 12);
+				write(':used Hours' : 13);
+				write(':remaining Hours' : 18);
+				write(':timeOver' : 11);
+				writeln;				{carige return}
+				while Tptr <> nil do
+					begin
+						Tptr^.Info.remHr := Tptr^.Info.maxHr - Tptr^.Info.usdHr;
+						write(Tptr^.Info.key : 12);				{student number}
+						if (Tptr^.Info.validity) then
+							write('valid student' : 16)
+						else
+							write('Invalid student' : 16);				{student validity}
+						max := convertToHr(Tptr^.Info.maxHr);
+						write(max div 100 : 8, ':' : 1);
+						if (max mod 100) = 0 then
+							write('00' : 2)
+						else
+							write(max mod 100 : 2);				{maximum hours}
+						usd := convertToHr(Tptr^.Info.usdHr);
+						write(usd div 100 : 9, ':' : 1);
+						if (usd mod 100) = 0 then
+							write('00' : 2)
+						else
+							write(usd mod 100 : 2);				{used hours}
+						rem := convertToHr(Tptr^.Info.remHr);
+						write(rem div 100 : 14, ':' : 1);
+						if (rem mod 100) = 0 then
+							write('00' : 2)
+						else
+							write(rem mod 100 : 2);
+						write('' : 4);				{remaining hours}
+						if (Tptr^.Info.penalty) then
+							write('penalty' : 11)
+						else
+							write('No penalty' : 11);				{penalty}
+						writeln;				{carige return}
+						Tptr := Tptr^.next;
+					end;				{while <>nil }
+			end;				{else}
+		writeln('' : 5, '{ ......................................................the end of weekly usage report..}');
+		writeln;				{making space for next action}
+	end;				{WklyListPrint}
+{*****************************}
+
+{*****************************}
+
+	procedure PrintList (List: ListType;
+									PrintStyle: StyleType);
+	begin
+		case PrintStyle of
+			Wkly: 
+				WklyListPrint(List);
+		end;				{case}
+	end;				{PrintList}
+{the other styles of printing can be added here in "case" statement...}
+{also add type of print in type-StyleType at the beginning of unit}
+{*************************************}
+end.				{ListPrint}

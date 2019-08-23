@@ -1,0 +1,336 @@
+unit Lfile;
+{Programmer:	Makoto Sadahiro }
+{starting date: Nov 22nd '93}
+{last modified date:  Nov 22nd '93}
+
+{all procedures for file functioning}
+{all procedures for file commands here}
+{will be used from either}
+{OpenLabLog, CloseLabLog}
+{or}
+{ChoseListing}
+{listed bottom in this unit}
+interface
+	uses
+		time, listype, listADT, ListPrints, IOOC;
+	var
+		SourceList, OutList: text;
+		SourceListFname, OutListFname: str255;
+				{decraration}
+{*************************************}
+{opening lab text file}
+	procedure OpenLabLog (var List: ListType);
+	{in: text file}
+	{out: list structure}
+	{pre: text files exist, list does not exist}
+	{post: list exists}
+{closing routine}
+	procedure CloseLabLog (var List: ListType);
+	{in: list structure}
+{out: text file}
+{post: text file saved if there was list}
+{*************************************}
+{chosing of style for printing out}
+	procedure ChoseListing (var List: ListType);
+{in: linked list}
+{out: list and style of print}
+{****************************************************************}
+
+implementation
+
+{manage openning source file, open the file and print the neme of file}
+	procedure GetText (var SourceList: text;
+									var SourceListFname: str255);
+	{out: source text}
+	{post: text file is open}
+	begin
+		OpenFileIN(SourceList, SourceListFname);
+		writeln(' following file opened....');
+		writeln('' : 5, SourceListFname);
+	end;				{GetText}
+{*****************************}
+
+{load list up from source text file}
+	procedure SourceToList (var myLabLog: ListType;
+									var mySourceList: text);
+	{in:text file}
+	{out:list}
+	{pre: list is empty}
+	{post:list is loaded}
+		var
+			iD: integer;
+			stuName, stuFName, stuLName: string[nameLength];
+			aStuLog, aNewStu: ListElementType;
+			there: boolean;
+	begin
+		writeln('loading data......');
+		while not eof(mySourceList) and not FullList(myLabLog) do
+			begin
+				readln(mySourceList, iD, stuName);
+				with aNewStu do
+					begin
+						key := iD;
+						name := stuName;
+						validity := true;
+						maxHr := defHr;
+						usdHr := 0;
+						remHr := maxHr - usdHr;
+						penalty := false;
+						atstatus := false;
+					end;				{with}
+				RetrieveElement(myLabLog, iD, aStuLog, there);
+				if (there) then
+					begin				{case student is already registered}
+						writeln;
+						aStuLog.maxHr := aStuLog.maxHr + defHr;
+						ModifyElement(myLabLog, aStuLog);
+						write('' : 5, 'student #', aStuLog.key : 4, '  overrided.  ');
+						write(defHr div 60 : 3, ':');
+						if defHr mod 60 = 0 then
+							write('00' : 2)
+						else
+							write(defHr mod 60 : 2);
+						writeln(' more hours are added');
+					end				{if there then}
+				else
+					begin				{case student is not already registered}
+						InsertElement(myLabLog, aNewStu);
+					end;				{if there else}
+			end;				{while not and not}
+		if FullList(myLabLog) then
+			writeln('shouldnt be here, but list is full...sad....');
+		writeln('' : 45, '{ ......................data loading done..}');
+	end;				{SourceToList}
+{*****************************}
+
+{load list up from source text file}
+	procedure LFileToList (var myLabLog: ListType;
+									var mySourceList: text);
+	{in:text file}
+	{out:list}
+	{pre: list is empty}
+	{post:list is loaded}
+		var
+			aNewStu: ListElementType;
+			iD: integer;
+			stuName: string[nameLength];
+			access, punish, atin: boolean;
+			maxTime, usdTime, remTime: integer;
+
+	begin
+		writeln('loading data......');
+		while not eof(mySourceList) and not FullList(myLabLog) do
+			begin
+				readln(mySourceList, iD);
+				readln(mySourceList, stuName);
+				readln(mySourceList, access);
+				readln(mySourceList, maxTime);
+				readln(mySourceList, usdTime);
+				readln(mySourceList, remTime);
+				readln(mySourceList, punish);
+				readln(mySourceList, atin);
+				with aNewStu do
+					begin
+						key := iD;
+						name := stuName;
+						validity := access;
+						maxHr := maxTime;
+						usdHr := usdTime;
+						remHr := remTime;
+						penalty := punish;
+						atstatus := atin;
+					end;		{with}
+				InsertElement(myLabLog, aNewStu);
+			end;				{while not and not}
+		if FullList(myLabLog) then
+			writeln('shouldnt be here, but list is full...sad....');
+		writeln('' : 45, '{ ......................data loading done..}');
+	end;		{LFileToList}
+{*****************************}
+
+{closeing text file}
+	procedure CloseSource (var mySourceList: text);
+	{in: text file}
+	{pre: text file is open}
+	{post:text file is closed}
+	begin
+		CloseFile(mySourceList)
+	end;				{CloseSource}
+{*****************************}
+
+{make new text file to be saved as data file}
+	procedure MakeNewText (var myOutList: text;
+									var myOutListFname: str255);
+	{out: new text file}
+	{pre: text file doesnt exist}
+	{post: text file exists}
+	begin
+		OpenFileOUT(myOutList, myOutListFname);
+		writeln('following new file created');
+		writeln('' : 5, myOutListFname);
+	end;				{OpenFileOUT}
+{*****************************}
+
+{write the contents of list into text file to be saved}
+	procedure ListToOutList (var myOutList: text;
+									var myLabLog: ListType);
+	{in: list}
+	{out: text file}
+	{pre: text file is empty}
+	{post: text file is loaded}
+		var
+			myPtr: PointerType;
+	begin
+		myPtr := myLabLog;
+		while myPtr <> nil do
+			begin
+				myPtr^.Info.remHr := myPtr^.Info.maxHr - myPtr^.Info.usdHr;
+				writeln(myOutList, myPtr^.Info.key);
+				writeln(myOutList, myPtr^.Info.name);
+				writeln(myOutList, myPtr^.Info.validity);
+				writeln(myOutList, myPtr^.Info.maxHr);
+				writeln(myOutList, myPtr^.Info.usdHr);
+				writeln(myOutList, myPtr^.Info.remHr);
+				writeln(myOutList, myPtr^.Info.penalty);
+				writeln(myOutList, myPtr^.Info.atstatus);
+				myPtr := myPtr^.next;
+			end;				{while}
+	end;				{ListToOutList}
+{*****************************}
+
+{close the text file to be saved}
+	procedure SaveOutList (var myOutList: text;
+									var myOutListFname: str255);
+	{in: text file}
+	{pre: text file is still open}
+	{post: text file is closed-saved}
+	begin
+		CloseFile(myOutList);
+		writeln('following file saved');
+		writeln('' : 5, myOutListFname);
+	end;				{SaveOutList}
+{*****************************}
+
+{destroying list structure to avoid wasting memory}
+	procedure WipeLabLog (var myLabLog: ListType);
+	{in: list}
+	{pre:list is loaded}
+	{post: list is nil}
+	begin
+		DestroyList(myLabLog);
+	end;				{WipeLabLog}
+
+{********************************}
+
+{checking if someone is still signed in when quitting}
+{if there sign everyone out}
+	procedure CheckAtStatus (var List: ListType);
+	{in: linked list}
+{out: linked list modified}
+{post: everyone is signned out}
+		var
+			Tptr: Pointertype;
+			timeIn, timeOut: integer;
+	begin
+		Tptr := List;
+		while Tptr <> nil do
+			begin
+				if Tptr^.info.atstatus then
+					begin
+						writeln('ID# ', Tptr^.info.key : 5, ' did not sign out yet');
+						writeln('I will sign the ID# ', Tptr^.info.key : 5, ' out...');
+						write('type in hour in 2 digits>');
+						readln(Tptr^.info.SoutTime.hour);
+						write('type in minute in 2 digits>');
+						readln(Tptr^.info.SoutTime.minute);
+						writeln('ID# ', Tptr^.info.key, ' signed out at ', Tptr^.info.SoutTime.hour : 2, ':', Tptr^.info.SoutTime.minute : 2);
+						timeOut := Tptr^.info.SoutTime.hour * 60 + Tptr^.info.SoutTime.minute;
+						timeIn := Tptr^.info.SinTime.hour * 60 + Tptr^.info.SinTime.minute;
+						if timeOut < timeIn then
+							timeOut := timeOut + 1440;
+						Tptr^.info.remHr := Tptr^.info.remHr - (timeOut - timeIn);
+						if Tptr^.info.remHr < 0 then
+							begin
+								Tptr^.info.penalty := true;
+								Tptr^.info.validity := false;
+							end;		{if rem<0 then}
+						Tptr^.info.usdHr := Tptr^.info.usdHr + (timeOut - timeIn);
+						Tptr^.info.atstatus := false;
+					end;		{Tptr^.info.atstatus then}
+				Tptr := Tptr^.next;
+			end;		{while Tptr<>nil do}
+	end;		{CheckAtStatus}
+{*************************************}
+
+	procedure OpenLabLog (var List: ListType);
+		var
+			choice: char;
+	begin
+		write('Open: from Text file,or Lablog file:T, L>');
+		readln(choice);
+		case choice of
+			'T': 
+				begin
+					GetText(SourceList, SourceListFname);
+					SourceToList(List, SourceList);
+					CloseSource(SourceList);
+				end;		{Text file}
+			'L': 
+				begin
+					GetText(SourceList, SourceListFname);
+					LFileToList(List, SourceList);
+					CloseSource(SourceList);
+				end;		{Lablog file}
+		end;		{case choice of}
+	end;		{OpenLabLog}
+{*****************************}
+
+	procedure CloseLabLog (var List: ListType);
+		var
+			OutTxtFile: text;
+			OutTxtFname: str255;
+	begin
+		if (EmptyList(List)) then
+			writeln('Quitting...')
+		else
+			begin
+				CheckAtStatus(List);
+				MakeNewText(OutTxtFile, OutTxtFname);
+				ListToOutList(OutTxtFile, List);
+				SaveOutList(OutTxtFile, OutTxtFname);
+				WipeLabLog(List);
+			end;		{if emptylist else}
+	end;		{CloseLabLog}
+{*************************************}
+
+	procedure ChoseListing (var List: ListType);
+		var
+			choice, doneChoice: char;
+			Style: StyleType;
+			done: boolean;
+	begin
+		done := false;
+		while not done do
+			begin
+				write('List:Full,Weekly>');
+				readln(choice);		{here make a choice of listing style}
+				case choice of
+					'F': 
+						begin
+							Style := Full;
+							PrintList(List, Style);
+						end;		{Full}
+					'W': 
+						begin
+							Style := Weekly;
+							PrintList(List, Style);
+						end;		{Weekly}
+				end;		{case choice of}
+				write('done?:Yes,No>');
+				readln(doneChoice);
+				if (doneChoice = 'y') or (doneChoice = 'Y') then
+					done := true;			{if not Y,y then repeat}
+			end;		{while not done}
+	end;		{ChoseListing}
+{****************************************************************}
+end.				{Lfile}
