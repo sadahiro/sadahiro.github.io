@@ -65,9 +65,9 @@
 	      </ul>
 	    <br>
 
-	    Parallel composition of large finite element dataset<br>
+	    Parallel composition of large dataset<br>
 	    <ul>
-	      Paralledl composition of large finite element dataset to an arbitrary size images.  The source is a simulation/modeling result composed of thansands of spacially segmented data files each with hundreds of time steps.<br>
+	      Paralledl composition of arbitrary size image of visualization from simulation data.  The source is composed of thansands of spacially segmented data files each with hundreds of time steps.<br>
 	      </ul>
 	    <br>
 
